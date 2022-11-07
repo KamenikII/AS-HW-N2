@@ -10,5 +10,5 @@ data class Post (
     var shareByMe: Boolean = false,
     var share: Share,
     var viewItByMe: Boolean = false,
-    var view: Long = 0
+    var view: View
 )

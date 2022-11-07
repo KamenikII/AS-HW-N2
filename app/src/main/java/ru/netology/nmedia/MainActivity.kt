@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             published = "7 ноября 2022 в 12:30",
             likeCount = Like(),
             share = Share(),
-            view = 0
+            view = View()
         )
 
         with(binding) {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             published.text = post.published
             content.text = post.content
             if (!post.viewItByMe) {
-                post.view++
+                post.view.viewAdd()
                 viewCount.text = post.view.toString()
             }
             
