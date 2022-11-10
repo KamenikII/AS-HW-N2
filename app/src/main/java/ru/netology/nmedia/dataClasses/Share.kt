@@ -1,4 +1,4 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.dataClasses
 
 class Share {
     private var shareCount: Long = 0

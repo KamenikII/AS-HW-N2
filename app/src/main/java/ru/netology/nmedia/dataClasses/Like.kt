@@ -1,4 +1,4 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.dataClasses
 
 class Like {
     private var likeCount: Long = 0
