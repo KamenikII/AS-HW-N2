@@ -23,12 +23,21 @@ class PostRepositoryInMemoryIml : PostRepository {
 
     override fun get(): LiveData<Post> = data
     override fun like() {
-        if (post.likeByMe) post.likeCount.likeAdd() else post.likeCount.likeDelete()
+        if (!post.likeByMe) post.likeCount.likeAdd() else post.likeCount.likeDelete()
         post = post.copy(likeByMe = !post.likeByMe, likeCount = post.likeCount)
         data.value = post
     }
     override fun share() {
-        post = post.copy(shareByMe = !post.shareByMe)
+        post.share.shareAdd()
+        post = post.copy(shareByMe = !post.shareByMe, share = post.share)
+        data.value = post
+    }
+
+    override fun view() {
+        if (!post.viewItByMe) {
+            post.view.viewAdd()
+            post = post.copy(viewItByMe = !post.viewItByMe, view = post.view)
+        }
         data.value = post
     }
 }
