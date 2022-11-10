@@ -1,7 +1,7 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.dataClasses
 
 class View {
-    private var viewCount: Long = 999
+    private var viewCount: Long = 0
     private var viewString: String = "0"
 
     fun viewAdd() {
