@@ -1,5 +1,6 @@
 package ru.netology.nmedia.adapters
 
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.dataClasses.Post
@@ -38,6 +39,26 @@ class PostViewHolder(
 //                like.setImageResource(R.drawable.ic_liked_24)
 //            }
 
+            //menu
+            moreActions.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.options_post)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.remove -> {
+                                onPostListener.onRemove(post)
+                                true
+                            }
+                            R.id.edit -> {
+                                onPostListener.onEdit(post)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
         }
     }
 }
