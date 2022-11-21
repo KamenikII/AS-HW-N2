@@ -21,10 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="content,saveButton" />
+        app:constraint_referenced_ids="saveTextField,saveButton" />
 
     <EditText
-        android:id="@+id/content"
+        android:id="@+id/saveTextField"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/post_text"
@@ -46,8 +46,31 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/description_post_like"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/content"
+        app:layout_constraintStart_toEndOf="@id/saveTextField"
         app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/ic_save_content"
         />
+
+    <TextView
+        android:id="@+id/description_by_back"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:padding="@dimen/common_spacing"
+        android:text="@string/description_by_back_text"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/toolsTop"
+        app:layout_constraintEnd_toStartOf="@id/backButton" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/common_spacing"
+        android:contentDescription="@string/description_button_back"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/toolsTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_save_cancel_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
