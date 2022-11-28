@@ -1,0 +1,50 @@
+<resources>
+
+    <style name="Widget.AppTheme.IconButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="iconTint">@color/icon_button_tint</item>
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">@dimen/icon_button_padding</item>
+        <item name="android:paddingEnd">@dimen/icon_button_padding</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+    </style>
+
+    <!--like-->
+<!--    <style name="Widget.AppTheme.LikeCheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">-->
+<!--        <item name="buttonTint">@color/like_checkbox_tint</item>-->
+<!--        <item name="android:paddingStart">@dimen/icon_button_padding</item>-->
+<!--    </style>-->
+
+    <style name="Widget.AppTheme.LikeButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="iconTint">@color/like_checkbox_tint</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+    </style>
+
+    <!--share-->
+<!--    <style name="Widget.AppTheme.ShareCheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">-->
+<!--        <item name="buttonTint">@color/share_checkbox_tint</item>-->
+<!--        <item name="android:paddingStart">@dimen/icon_button_padding</item>-->
+<!--    </style>-->
+
+    <style name="Widget.AppTheme.ShareButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="iconTint">@color/share_checkbox_tint</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+    </style>
+
+    <!--more action-->
+    <!--    <style name="Widget.AppTheme.ShareCheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">-->
+    <!--        <item name="buttonTint">@color/share_checkbox_tint</item>-->
+    <!--        <item name="android:paddingStart">@dimen/icon_button_padding</item>-->
+    <!--    </style>-->
+
+    <style name="Widget.AppTheme.MoreButton" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+        <item name="iconTint">@color/more_checkbox_tint</item>
+        <item name="android:minWidth">@dimen/icon_button_min_size</item>
+        <item name="android:minHeight">@dimen/icon_button_min_size</item>
+    </style>
+
+</resources>
