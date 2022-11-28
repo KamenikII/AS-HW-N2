@@ -1,17 +1,22 @@
 package ru.netology.nmedia.activity
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import ru.netology.nmedia.R
 import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: PostViewModel by viewModels()
-    private val postListener = object : OnPostListener {
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val adapter = PostsAdapter(object : OnPostListener {
         override fun onLike(post: Post) {
             viewModel.likeById(post.id)
         }
@@ -23,17 +28,72 @@ class MainActivity : AppCompatActivity() {
         override fun view(post: Post) {
             viewModel.viewById(post.id)
         }
-    }
+
+        override fun onEdit(post: Post) {
+            viewModel.edit(post)
+        }
+
+        override fun onRemove(post: Post) {
+            viewModel.removeById(post.id)
+        }
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val adapter = PostsAdapter(postListener)
         binding.list.adapter = adapter
         viewModel.data.observe(this) { posts ->
             adapter.submitList(posts)
+        }
+
+        viewModel.edited.observe(this) { post ->
+            if (post.id == 0L) {
+                return@observe
+            }
+            with(binding.saveTextField) {
+                requestFocus()
+                setText(post.content)
+            }
+        }
+
+        binding.saveButton.setOnClickListener {
+            with(binding.saveTextField) {
+                if (text.isNullOrBlank()) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        context.getString(R.string.error_empty_content),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setOnClickListener
+                }
+
+                viewModel.changeContent(text.toString())
+                viewModel.save()
+
+                setText("")
+                clearFocus()
+                binding.descriptionByBack.visibility = View.GONE
+                binding.backButton.visibility = View.GONE
+                AndroidUtils.hideKeyboard(this)
+            }
+        }
+
+        binding.saveTextField.setOnFocusChangeListener { _, _ ->
+            binding.descriptionByBack.visibility = View.VISIBLE
+            binding.backButton.visibility = View.VISIBLE
+        }
+
+        binding.backButton.setOnClickListener {
+            with(binding.saveTextField) {
+                setText("")
+                clearFocus()
+                AndroidUtils.hideKeyboard(this)
+            }
+            binding.descriptionByBack.visibility = View.GONE
+            binding.backButton.visibility = View.GONE
+            viewModel.edited.value?.copy(id = 0)
+            viewModel.save() //В save добавили проверку на наполнение поста
         }
     }
 }
