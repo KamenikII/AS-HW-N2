@@ -87,7 +87,7 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="content" />
 
-    <ImageButton
+    <Button
         android:id="@+id/like"
         style="@style/Widget.AppTheme.LikeButton"
         android:layout_width="wrap_content"
@@ -96,45 +96,26 @@
         android:layout_marginTop="4dp"
         android:background="@android:color/transparent"
         android:checkable="true"
+        android:textSize="15sp"
+        android:text="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/ic_unpressedlike"
+        app:icon="@drawable/ic_unpressedlike"
         tools:checked="@sample/posts.json/data/likedByMe" />
 
-    <TextView
-        android:id="@+id/likeCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="0"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@id/like"
-        app:layout_constraintStart_toEndOf="@id/like"
-        app:layout_constraintTop_toTopOf="@id/like"
-        />
-
-    <ImageButton
-        android:id="@+id/shareItImage"
+    <Button
+        android:id="@+id/shareIt"
         style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_shareit"
-        app:layout_constraintBottom_toBottomOf="@id/like"
-        app:layout_constraintStart_toEndOf="@id/likeCount"
-        app:layout_constraintTop_toTopOf="@id/like" />
-
-    <TextView
-        android:id="@+id/shareItCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        app:icon="@drawable/ic_shareit"
         android:text="0"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@id/likeCount"
-        app:layout_constraintStart_toEndOf="@id/shareItImage"
-        app:layout_constraintTop_toTopOf="@id/likeCount" />
+        app:layout_constraintBottom_toBottomOf="@id/like"
+        app:layout_constraintStart_toEndOf="@id/like"
+        app:layout_constraintTop_toTopOf="@id/like" />
 
     <TextView
         android:id="@+id/viewCount"
@@ -143,9 +124,9 @@
         android:layout_marginEnd="16dp"
         android:text="0"
         android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@id/likeCount"
+        app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/likeCount" />
+        app:layout_constraintTop_toTopOf="@id/like" />
 
     <ImageButton
         android:id="@+id/viewImage"
