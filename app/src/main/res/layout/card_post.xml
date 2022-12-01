@@ -87,7 +87,7 @@
         app:barrierDirection="bottom"
         app:constraint_referenced_ids="content" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/like"
         style="@style/Widget.AppTheme.LikeButton"
         android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
         app:icon="@drawable/ic_unpressedlike"
         tools:checked="@sample/posts.json/data/likedByMe" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/shareIt"
         style="@style/Widget.AppTheme.ShareButton"
         android:layout_width="wrap_content"
