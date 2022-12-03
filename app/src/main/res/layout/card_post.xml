@@ -100,7 +100,7 @@
         android:text="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:icon="@drawable/ic_unpressedlike"
+        app:icon="@drawable/like"
         tools:checked="@sample/posts.json/data/likedByMe" />
 
     <com.google.android.material.button.MaterialButton
@@ -109,34 +109,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:checkable="true"
         android:background="@android:color/transparent"
-        app:icon="@drawable/ic_shareit"
+        app:icon="@drawable/share"
         android:text="0"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintStart_toEndOf="@id/like"
         app:layout_constraintTop_toTopOf="@id/like" />
 
-    <TextView
-        android:id="@+id/viewCount"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/view"
+        style="@style/Widget.AppTheme.view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
         android:text="0"
         android:textSize="15sp"
+        app:icon="@drawable/view"
         app:layout_constraintBottom_toBottomOf="@id/like"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/like" />
-
-    <ImageButton
-        android:id="@+id/viewImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_view"
-        app:layout_constraintBottom_toBottomOf="@id/like"
-        app:layout_constraintEnd_toStartOf="@id/viewCount"
         app:layout_constraintTop_toTopOf="@id/like" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
