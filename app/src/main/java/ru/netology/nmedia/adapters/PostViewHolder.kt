@@ -20,20 +20,22 @@ class PostViewHolder(
             like.setOnClickListener{
                 onPostListener.onLike(post)
             }
-            like.setImageResource(
-                if (post.likeByMe) R.drawable.ic_pressedlike else R.drawable.ic_unpressedlike
-            )
-            likeCount.text = post.likeCount.toString()
+//            like.setIconResource(
+//                if (post.likeByMe) R.drawable.ic_pressedlike else R.drawable.ic_unpressedlike
+//            )
+            like.isChecked = post.likeByMe
+            like.text = post.likeCount.toString()
 
             //share
-            shareItImage.setOnClickListener{
+            shareIt.setOnClickListener{
                 onPostListener.onShare(post)
             }
-            if (post.shareByMe) shareItImage.setImageResource(R.drawable.ic_shareitpressed)
-            shareItCount.text = post.share.toString()
+            //if (post.shareByMe) shareIt.setIconResource(R.drawable.ic_shareitpressed)
+            shareIt.isChecked = post.shareByMe
+            shareIt.text = post.share.toString()
 
             //view
-            viewCount.text = post.view.toString()
+            view.text = post.view.toString()
             onPostListener.view(post)
 //            if (post.likedByMe) {
 //                like.setImageResource(R.drawable.ic_liked_24)
