@@ -3,6 +3,7 @@ package ru.netology.nmedia.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.launch
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.R
@@ -47,53 +48,68 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(posts)
         }
 
-        viewModel.edited.observe(this) { post ->
-            if (post.id == 0L) {
-                return@observe
-            }
-            with(binding.saveTextField) {
-                requestFocus()
-                setText(post.content)
-            }
+        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+            result ?: return@registerForActivityResult
+            viewModel.changeContent(result)
+            viewModel.save()
         }
 
-        binding.saveButton.setOnClickListener {
-            with(binding.saveTextField) {
-                if (text.isNullOrBlank()) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        context.getString(R.string.error_empty_content),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@setOnClickListener
-                }
-
-                viewModel.changeContent(text.toString())
-                viewModel.save()
-
-                setText("")
-                clearFocus()
-                binding.descriptionByBack.visibility = View.GONE
-                binding.backButton.visibility = View.GONE
-                AndroidUtils.hideKeyboard(this)
-            }
+        binding.fab.setOnClickListener {
+            newPostLauncher.launch()
         }
 
-        binding.saveTextField.setOnFocusChangeListener { _, _ ->
-            binding.descriptionByBack.visibility = View.VISIBLE
-            binding.backButton.visibility = View.VISIBLE
-        }
-
-        binding.backButton.setOnClickListener {
-            with(binding.saveTextField) {
-                setText("")
-                clearFocus()
-                AndroidUtils.hideKeyboard(this)
-            }
-            binding.descriptionByBack.visibility = View.GONE
-            binding.backButton.visibility = View.GONE
-            viewModel.edited.value?.copy(id = 0)
-            viewModel.save() //В save добавили проверку на наполнение поста
-        }
+//        binding.list.adapter = adapter
+//        viewModel.data.observe(this) { posts ->
+//            adapter.submitList(posts)
+//        }
+//
+//        viewModel.edited.observe(this) { post ->
+//            if (post.id == 0L) {
+//                return@observe
+//            }
+//            with(binding.saveTextField) {
+//                requestFocus()
+//                setText(post.content)
+//            }
+//        }
+//
+//        binding.saveButton.setOnClickListener {
+//            with(binding.saveTextField) {
+//                if (text.isNullOrBlank()) {
+//                    Toast.makeText(
+//                        this@MainActivity,
+//                        context.getString(R.string.error_empty_content),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                    return@setOnClickListener
+//                }
+//
+//                viewModel.changeContent(text.toString())
+//                viewModel.save()
+//
+//                setText("")
+//                clearFocus()
+//                binding.descriptionByBack.visibility = View.GONE
+//                binding.backButton.visibility = View.GONE
+//                AndroidUtils.hideKeyboard(this)
+//            }
+//        }
+//
+//        binding.saveTextField.setOnFocusChangeListener { _, _ ->
+//            binding.descriptionByBack.visibility = View.VISIBLE
+//            binding.backButton.visibility = View.VISIBLE
+//        }
+//
+//        binding.backButton.setOnClickListener {
+//            with(binding.saveTextField) {
+//                setText("")
+//                clearFocus()
+//                AndroidUtils.hideKeyboard(this)
+//            }
+//            binding.descriptionByBack.visibility = View.GONE
+//            binding.backButton.visibility = View.GONE
+//            viewModel.edited.value?.copy(id = 0)
+//            viewModel.save() //В save добавили проверку на наполнение поста
+//        }
     }
 }
