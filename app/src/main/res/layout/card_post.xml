@@ -80,12 +80,38 @@
         app:layout_constraintTop_toBottomOf="@id/barrier1"
         app:layout_constraintVertical_bias="0.0" />
 
+    <FrameLayout
+        android:id="@+id/videoLayout"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content" >
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"/>
+
+        <ImageView
+            android:id="@+id/videoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play_circle"
+            app:tint="#ffffff" />
+    </FrameLayout>
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="content" />
+        app:constraint_referenced_ids="videoLayout" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/like"

@@ -2,6 +2,7 @@ package ru.netology.nmedia.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFINITE
 import ru.netology.nmedia.databinding.ActivityIntentHandlerBinding
@@ -26,8 +27,14 @@ class IntentHandlerActivity : AppCompatActivity() {
                         finish()
                     }
                     .show()
-                return@let
+            } else {
+                Snackbar.make(binding.root, text, LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok) {
+                        finish()
+                    }
+                    .show()
             }
+
             // TODO: handle text
         }
     }
