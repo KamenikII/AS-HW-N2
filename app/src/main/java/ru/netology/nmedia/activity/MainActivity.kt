@@ -22,14 +22,14 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     //функция вызываемая по завершении редактирования
-    val editPostLauncher = registerForActivityResult(EditPostResultContract()) { result ->
+    private val editPostLauncher = registerForActivityResult(EditPostResultContract()) { result ->
         result ?: return@registerForActivityResult
         viewModel.changeContent(result)
         viewModel.save()
     }
 
     //функция вызываемая по завершении создания поста
-    val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
+    private val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
         result ?: return@registerForActivityResult
         viewModel.changeContent(result)
         viewModel.save()
