@@ -1,4 +1,4 @@
-package ru.netology.nmedia.myapplication.activity
+package ru.netology.nmedia.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.ActivityEditPostBinding
+import ru.netology.nmedia.myapplication.activity.POST_TEXT
 
 class EditPostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

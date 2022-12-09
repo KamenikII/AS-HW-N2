@@ -18,8 +18,8 @@ class PostRepositoryInMemoryIml : PostRepository {
         published = "7 ноября 2022 в 12:30",
         likeCount = Like(),
         share = Share(),
-        view = View()
-        //urlOfVideo = "https://www.youtube.com/watch?v=xHTMFcPy4-w"
+        view = View(),
+        urlOfVideo = "https://www.youtube.com/watch?v=xHTMFcPy4-w"
         ),
         Post(
             id = 2,
