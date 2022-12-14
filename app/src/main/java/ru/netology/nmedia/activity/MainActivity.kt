@@ -99,44 +99,6 @@ class MainActivity : AppCompatActivity() {
 //                setText(post.content)
 //            }
         }
-//
-//        binding.saveButton.setOnClickListener {
-//            with(binding.saveTextField) {
-//                if (text.isNullOrBlank()) {
-//                    Toast.makeText(
-//                        this@MainActivity,
-//                        context.getString(R.string.error_empty_content),
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    return@setOnClickListener
-//                }
-//
-//                viewModel.changeContent(text.toString())
-//                viewModel.save()
-//
-//                setText("")
-//                clearFocus()
-//                binding.descriptionByBack.visibility = View.GONE
-//                binding.backButton.visibility = View.GONE
-//                AndroidUtils.hideKeyboard(this)
-//            }
-//        }
-//
-//        binding.saveTextField.setOnFocusChangeListener { _, _ ->
-//            binding.descriptionByBack.visibility = View.VISIBLE
-//            binding.backButton.visibility = View.VISIBLE
-//        }
-//
-//        binding.backButton.setOnClickListener {
-//            with(binding.saveTextField) {
-//                setText("")
-//                clearFocus()
-//                AndroidUtils.hideKeyboard(this)
-//            }
-//            binding.descriptionByBack.visibility = View.GONE
-//            binding.backButton.visibility = View.GONE
-//            viewModel.edited.value?.copy(id = 0)
-//            viewModel.save() //В save добавили проверку на наполнение поста
-//        }
+
     }
 }
