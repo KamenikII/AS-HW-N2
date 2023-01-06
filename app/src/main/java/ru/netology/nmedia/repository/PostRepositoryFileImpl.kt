@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ru.netology.nmedia.dataClasses.Post
 
-class PostRepositoryFileIml(
+class PostRepositoryFileImpl(
     private val context: Context
 ) : PostRepository {
     private var nextId = 1L
@@ -18,13 +18,17 @@ class PostRepositoryFileIml(
     private val fileName = "Posts.json"
     private val data = MutableLiveData(posts)
 
-    init {
+    init { //инициализация gson файла из json
         val file = context.filesDir.resolve(fileName)
         if (file.exists()) { //существует ли файл
             //читаем
             context.openFileInput(fileName).bufferedReader().use {
-                posts = gsonFile.fromJson(it, type)
-                data.value = posts
+                try {
+                    posts = gsonFile.fromJson(it, type)
+                    data.value = posts
+                } catch (e: Exception) {
+                    data.value = posts
+                }
             }
         } else {
             //Записываем пустой массив
@@ -32,10 +36,12 @@ class PostRepositoryFileIml(
         }
     }
 
+    //получаем список постов
     override fun getAll(): LiveData<List<Post>> = data
 
+    //сохраняем пост
     override fun save(post: Post) {
-        if (post.id == 0L) {
+        if (post.id == 0L && post.content.isNotEmpty()) { //новый пост
             posts = posts + listOf(
                 post.copy(
                     id = nextId++,
@@ -48,6 +54,7 @@ class PostRepositoryFileIml(
             return
         }
 
+        //изменяем старый пост
         posts = posts.map {
             if (it.id != post.id) it else it.copy(content = post.content)
         }
@@ -55,6 +62,7 @@ class PostRepositoryFileIml(
         sync()
     }
 
+    //пользователь поставил лайк посту
     override fun likeById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else {
@@ -66,6 +74,7 @@ class PostRepositoryFileIml(
         sync()
     }
 
+    //пользователь поделился постом
     override fun shareById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else {
@@ -77,6 +86,7 @@ class PostRepositoryFileIml(
         sync()
     }
 
+    //пользователь просмотрел пост
     override fun viewById(id: Long) {
         posts = posts.map {
             if (it.id != id) it else {
@@ -90,14 +100,19 @@ class PostRepositoryFileIml(
         sync()
     }
 
+    //удаление поста
     override fun removeById(id: Long) {
         posts = posts.filter { it.id != id }
         data.value = posts
         sync()
     }
 
+    //редактор поста
+    override fun edit(post: Post) {
+        save(post)
+    }
 
-
+    //функция записи из gson в json
     private fun sync() {
         context.openFileOutput(fileName, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gsonFile.toJson(posts))
