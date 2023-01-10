@@ -19,5 +19,7 @@
     <string name="post_menu_remove">Remove</string>
     <string name="post_text_title">Title</string>
     <string name="post_text_time">Now</string>
+    <string name="add_post">Add</string>
 
+    <string name="chooser_share_post">My app for your share</string>
 </resources>

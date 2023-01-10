@@ -3,14 +3,12 @@ package ru.netology.nmedia.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import ru.netology.nmedia.dataClasses.Like
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.dataClasses.Share
 import ru.netology.nmedia.dataClasses.View
 import ru.netology.nmedia.repository.PostRepository
-import ru.netology.nmedia.repository.PostRepositoryFileIml
-import ru.netology.nmedia.repository.PostRepositoryInMemoryIml
+import ru.netology.nmedia.repository.PostRepositoryFileImpl
 
 private val postSample = Post (
     id = 0,
@@ -23,13 +21,14 @@ private val postSample = Post (
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositoryFileIml(application)
+    private val repository: PostRepository = PostRepositoryFileImpl(application)
     val data = repository.getAll()
-    val edited = MutableLiveData(postSample)
+    private val edited = MutableLiveData(postSample)
 
     fun likeById(id: Long) = repository.likeById(id)
     fun shareById(id: Long) = repository.shareById(id)
     fun viewById(id: Long) = repository.viewById(id)
+    fun removeById(id: Long) = repository.removeById(id)
     fun save() {
         edited.value?.let {
             repository.save(it)
@@ -48,6 +47,4 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
         edited.value = edited.value?.copy(content = text)
     }
-
-    fun removeById(id: Long) = repository.removeById(id)
 }
