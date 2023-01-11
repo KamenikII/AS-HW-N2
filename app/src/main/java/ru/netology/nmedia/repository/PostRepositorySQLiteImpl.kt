@@ -38,7 +38,6 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
         data.value = posts
     }
 
-    //TODO
 
     //Лайкаем пост
     override fun likeById(id: Long) {

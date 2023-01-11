@@ -6,50 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import ru.netology.nmedia.dataClasses.Post
 
 class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
-    companion object {
-        //строим таблицу БД
-        val DDL = """
-            CREATE TABLE ${PostColumns.TABLE} ( 
-                ${PostColumns.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT,
-                ${PostColumns.COLUMN_AUTHOR} TEXT NOT NULL,
-                ${PostColumns.COLUMN_CONTENT} TEXT NOT NULL,
-                ${PostColumns.COLUMN_PUBLISHED} TEXT NOT NULL,
-                ${PostColumns.COLUMN_LIKED_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
-                ${PostColumns.COLUMN_LIKES} INTEGER NOT NULL DEFAULT 0,
-                ${PostColumns.COLUMN_SHARED_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
-                ${PostColumns.COLUMN_SHARES} INTEGER NOT NULL DEFAULT 0,
-                ${PostColumns.COLUMN_VIEW_BY_ME} BOOLEAN NOT NULL DEFAULT 0,
-                ${PostColumns.COLUMN_VIEWS} INTEGER NOT NULL DEFAULT 0
-            );
-        """.trimIndent()
-    }
-
-    object PostColumns {
-        const val TABLE = "posts"
-        const val COLUMN_ID = "id"
-        const val COLUMN_AUTHOR = "author"
-        const val COLUMN_CONTENT = "content"
-        const val COLUMN_PUBLISHED = "published"
-        const val COLUMN_LIKED_BY_ME = "likeByMe"
-        const val COLUMN_LIKES = "likeCount"
-        const val COLUMN_SHARED_BY_ME = "shareByMe"
-        const val COLUMN_SHARES = "shareIt"
-        const val COLUMN_VIEW_BY_ME = "viewItByMe"
-        const val COLUMN_VIEWS = "view"
-        val ALL_COLUMNS = arrayOf(
-            COLUMN_ID,
-            COLUMN_AUTHOR,
-            COLUMN_CONTENT,
-            COLUMN_PUBLISHED,
-            COLUMN_LIKED_BY_ME,
-            COLUMN_LIKES,
-            COLUMN_SHARED_BY_ME,
-            COLUMN_SHARES,
-            COLUMN_VIEW_BY_ME,
-            COLUMN_VIEWS
-        )
-    }
-
     //получаем список постов
     override fun getAll(): List<Post> {
         val posts = mutableListOf<Post>()
@@ -68,12 +24,26 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
         return posts
     }
 
-    override fun save(post: Post): Post {
+    override fun save(post: Post): Post { //сохраняем пост
         val values = ContentValues().apply {
-            // TODO: remove hardcoded values
-            put(PostColumns.COLUMN_AUTHOR, "Netology")
-            put(PostColumns.COLUMN_CONTENT, post.content)
-            put(PostColumns.COLUMN_PUBLISHED, "now")
+            if (post.id != 0L) {
+                put(PostColumns.COLUMN_ID, post.id)
+            }
+            if (post.author.isNotBlank()) {
+                put(PostColumns.COLUMN_AUTHOR, post.author)
+            }
+            if (post.published.isNotBlank()) {
+                put(PostColumns.COLUMN_PUBLISHED, post.published)
+            }
+            if (post.content.isNotBlank()) {
+                put(PostColumns.COLUMN_CONTENT, post.content)
+            }
+            put(PostColumns.COLUMN_LIKED_BY_ME, post.likeByMe)
+            put(PostColumns.COLUMN_LIKES, post.likeCount)
+            put(PostColumns.COLUMN_SHARED_BY_ME, post.shareByMe)
+            put(PostColumns.COLUMN_SHARES, post.share)
+            put(PostColumns.COLUMN_VIEW_BY_ME, post.viewItByMe)
+            put(PostColumns.COLUMN_VIEWS, post.viewIt)
         }
 
         val id = if (post.id != 0L) {
@@ -105,10 +75,10 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     override fun likeById(id: Long) {
         db.execSQL(
             """
-                UPDATE posts SET
-                    likeCount = likeCount + CASE WHEN likeByMe THEN -1 ELSE 1 END,
-                    likedByMe = CASE WHEN likedByMe THEN 0 ELSE 1 END
-                WHERE id = ?;
+                UPDATE ${PostColumns.TABLE} SET
+                    ${PostColumns.COLUMN_LIKES} = ${PostColumns.COLUMN_LIKES} + CASE WHEN ${PostColumns.COLUMN_LIKED_BY_ME} THEN -1 ELSE 1 END,
+                    ${PostColumns.COLUMN_LIKED_BY_ME} = CASE WHEN ${PostColumns.COLUMN_LIKED_BY_ME} THEN 0 ELSE 1 END
+                WHERE id=?
             """.trimIndent(), arrayOf(id)
         )
     }
@@ -124,10 +94,10 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     override fun shareById(id: Long) {
         db.execSQL(
             """
-                UPDATE posts SET
-                    share = share + CASE WHEN shareByMe THEN -1 ELSE 1 END,
-                    shareByMe = 1 
-                WHERE id = ?;
+                UPDATE ${PostColumns.TABLE} SET
+                    ${PostColumns.COLUMN_SHARES} = ${PostColumns.COLUMN_SHARES} + CASE WHEN ${PostColumns.COLUMN_SHARED_BY_ME} THEN -1 ELSE 1 END,
+                    ${PostColumns.COLUMN_SHARED_BY_ME} = CASE WHEN ${PostColumns.COLUMN_SHARED_BY_ME} THEN 0 ELSE 1 END
+                WHERE id=?
             """.trimIndent(), arrayOf(id)
         )
     }
@@ -135,10 +105,10 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
     override fun viewById(id: Long) {
         db.execSQL(
             """
-                UPDATE posts SET
-                    viewIt = viewIt + CASE WHEN viewItByMe THEN -1 ELSE 1 END,
-                    viewIt = 1 
-                WHERE id = ?;
+                UPDATE ${PostColumns.TABLE} SET
+                    ${PostColumns.COLUMN_VIEWS} = ${PostColumns.COLUMN_VIEWS} + CASE WHEN ${PostColumns.COLUMN_VIEW_BY_ME} THEN -1 ELSE 1 END,
+                    ${PostColumns.COLUMN_VIEW_BY_ME} = CASE WHEN ${PostColumns.COLUMN_VIEW_BY_ME} THEN 0 ELSE 1 END
+                WHERE id=?
             """.trimIndent(), arrayOf(id)
         )
     }
@@ -156,10 +126,10 @@ class PostDaoImpl(private val db: SQLiteDatabase) : PostDao {
                 published = getString(getColumnIndexOrThrow(PostColumns.COLUMN_PUBLISHED)),
                 likeByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKED_BY_ME)) != 0,
                 likeCount = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKES)),
-                shareByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKED_BY_ME)) != 0,
-                share = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKES)),
-                viewItByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKED_BY_ME)) != 0,
-                viewIt = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_LIKES))
+                shareByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARED_BY_ME)) != 0,
+                share = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_SHARES)),
+                viewItByMe = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_VIEW_BY_ME)) != 0,
+                viewIt = getInt(getColumnIndexOrThrow(PostColumns.COLUMN_VIEWS))
             )
         }
     }
