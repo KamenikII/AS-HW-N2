@@ -36,7 +36,7 @@ class PostFragment : Fragment() {
                     like.isChecked = post.likeByMe
                     shareIt.text = post.share.toString()
                     shareIt.isChecked = post.shareByMe
-                    view.text = post.view.toString()
+                    view.text = post.viewIt.toString()
                     view.isChecked = post.viewItByMe
 
                     if (!post.urlOfVideo.isNullOrBlank()) {

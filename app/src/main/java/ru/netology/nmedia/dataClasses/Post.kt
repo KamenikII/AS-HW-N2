@@ -9,11 +9,11 @@ data class Post (
 
     //statistic of post
     val likeByMe: Boolean = false,
-    val likeCount: Like,
+    val likeCount: Int = 0,
     val shareByMe: Boolean = false,
-    val share: Share,
+    val share: Int = 0,
     val viewItByMe: Boolean = false,
-    val view: View,
+    val viewIt: Int = 0,
 
     //link and files
     val urlOfVideo: String? = null

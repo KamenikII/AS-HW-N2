@@ -8,6 +8,7 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.Companion.Companion.textArg
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

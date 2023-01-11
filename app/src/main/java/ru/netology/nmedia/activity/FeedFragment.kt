@@ -19,14 +19,14 @@ import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment() {
+    private val viewModel: PostViewModel by viewModels(::requireParentFragment)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentFeedBinding.inflate(layoutInflater)
-
-        val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
         val adapter = PostsAdapter(
             object : OnPostListener {
