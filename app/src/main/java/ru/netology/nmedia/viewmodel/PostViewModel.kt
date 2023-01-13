@@ -3,6 +3,7 @@ package ru.netology.nmedia.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import ru.netology.nmedia.dao.ConstantValues.emptyPost
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.dataClasses.Like
 import ru.netology.nmedia.dataClasses.Share
@@ -11,20 +12,10 @@ import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 
-private val postSample = Post (
-    id = 0,
-    content = "",
-    author = "",
-    published = "",
-    likeCount = 0,
-    share = 0,
-    viewIt = 0
-)
-
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao)
     val data = repository.getAll()
-    private val edited = MutableLiveData(postSample)
+    private val edited = MutableLiveData(emptyPost)
 
     fun likeById(id: Long) = repository.likeById(id)
     fun shareById(id: Long) = repository.shareById(id)
@@ -34,7 +25,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value?.let {
             repository.save(it)
         }
-        edited.value = postSample
+        edited.value = emptyPost
     }
 
     fun edit(post: Post) {

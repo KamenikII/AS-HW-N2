@@ -3,7 +3,7 @@ package ru.netology.nmedia.dataClasses
 data class Post (
     //info about post
     val id : Long,
-    val author: String,
+    val author: String = "Netology",
     val content: String,
     val published: String,
 

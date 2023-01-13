@@ -11,6 +11,6 @@ object ConstantValues {
         likeCount = 0,
         share = 0,
         viewIt = 0,
-        published = ""
+        published = "now"
     )
 }

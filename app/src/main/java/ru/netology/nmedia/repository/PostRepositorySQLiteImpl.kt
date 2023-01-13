@@ -21,8 +21,8 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
     override fun save(post: Post) {
         val id = post.id
         val saved = dao.save(post)
-        posts = if (id == 0L) {
-            listOf(saved) + posts
+        if (id == 0L) {
+            posts = posts + listOf(saved)
         } else {
             posts.map {
                 if (it.id != id) it else saved
