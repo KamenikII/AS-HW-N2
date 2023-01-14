@@ -11,9 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import ru.netology.nmedia.R
 import androidx.navigation.fragment.findNavController
-import ru.netology.nmedia.activity.Companion.Companion.longArg
-import ru.netology.nmedia.activity.Companion.Companion.textArg
 import ru.netology.nmedia.databinding.FragmentPostBinding
+import ru.netology.nmedia.util.Companion.Companion.longArg
+import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class PostFragment : Fragment() {
@@ -36,7 +36,7 @@ class PostFragment : Fragment() {
                     like.isChecked = post.likeByMe
                     shareIt.text = post.share.toString()
                     shareIt.isChecked = post.shareByMe
-                    view.text = post.view.toString()
+                    view.text = post.viewIt.toString()
                     view.isChecked = post.viewItByMe
 
                     if (!post.urlOfVideo.isNullOrBlank()) {

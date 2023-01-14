@@ -5,9 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import ru.netology.nmedia.R
-import ru.netology.nmedia.activity.Companion.Companion.textArg
+import ru.netology.nmedia.util.Companion.Companion.textArg
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
