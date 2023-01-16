@@ -13,7 +13,7 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao)
+    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
     val data = repository.getAll()
     private val edited = MutableLiveData(emptyPost)
 
