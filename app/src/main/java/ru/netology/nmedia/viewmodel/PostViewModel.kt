@@ -5,9 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dao.ConstantValues.emptyPost
 import ru.netology.nmedia.dataClasses.Post
-import ru.netology.nmedia.dataClasses.Like
-import ru.netology.nmedia.dataClasses.Share
-import ru.netology.nmedia.dataClasses.View
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
