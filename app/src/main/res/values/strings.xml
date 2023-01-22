@@ -22,4 +22,12 @@
     <string name="add_post">Add</string>
 
     <string name="chooser_share_post">My app for your share</string>
+
+    <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="notification_user_sending_post">%1$s published a new post:</string>
+    <string name="obscure_operation">Obscore operation</string>
+    <string name="unknown_action">Unknown action</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
 </resources>
