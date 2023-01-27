@@ -29,5 +29,6 @@ class PostsAdapter(
         val post = getItem(position)
         holder.renderingPostStructure(post)
     }
+
 }
 

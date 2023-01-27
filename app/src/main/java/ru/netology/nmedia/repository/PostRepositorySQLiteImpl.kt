@@ -26,7 +26,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
     }
 
     //получаем список постов
-    override fun getAll() = Transformations.map(dao.getAll()) { list ->
+    override fun getAll(): List<Post> {
         val request: Request = Request.Builder()
             .url("${BASE_URL}/api/slow/posts")
             .build()
@@ -34,9 +34,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
         return client.newCall(request)
             .execute()
             .let { it.body?.string() ?: throw RuntimeException("body is null") }
-            .let {
-                gson.fromJson(it, typeToken.type)
-            }
+            .let { gson.fromJson(it, typeToken.type) }
     }
 
     //сохраняем пост

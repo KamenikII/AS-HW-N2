@@ -25,6 +25,7 @@ class PostFragment : Fragment() {
         val binding = FragmentPostBinding.inflate(layoutInflater)
 
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
+
         with(binding.scrollContent) {
             viewModel.data.observe(viewLifecycleOwner) { posts ->
                 val post = posts.find { it.id == arguments?.longArg }

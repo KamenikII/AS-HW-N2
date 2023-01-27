@@ -84,4 +84,5 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:$play_services_base_version"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
 }
