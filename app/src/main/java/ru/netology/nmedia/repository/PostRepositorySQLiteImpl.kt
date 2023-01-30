@@ -63,18 +63,38 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
 
 
     //Лайкаем пост
-    override fun likeById(id: Long) {
-        dao.likeById(id)
+    override fun likeById(post:Post) {
+        val request: Request = if (post.likeByMe) {
+            Request.Builder()
+                .delete(gson.toJson(post).toRequestBody(jsonType))
+                .url("${BASE_URL}/api/posts/${post.id}/likeCount")
+                .build()
+        } else {
+            Request.Builder()
+                .post(gson.toJson(post).toRequestBody(jsonType))
+                .url("${BASE_URL}/api/slow/posts/${post.id}/likeCount")
+                .build()
+        }
+
+        client.newCall(request)
+            .execute()
+            .close()
     }
 
     //поделиться постом
-    override fun shareById(id: Long) {
-        dao.shareById(id)
+    override fun shareById(post: Post) {
+        val request: Request = Request.Builder()
+            .post(gson.toJson(post).toRequestBody(jsonType))
+            .url("${BASE_URL}/api/slow/posts/${post.id}/share")
+            .build()
     }
 
     //просмотры поста пользователем
-    override fun viewById(id: Long) {
-        dao.viewItById(id)
+    override fun viewById(post: Post) {
+        val request: Request = Request.Builder()
+            .post(gson.toJson(post).toRequestBody(jsonType))
+            .url("${BASE_URL}/api/slow/posts/${post.id}/viewIt")
+            .build()
     }
 
     //редактор поста
