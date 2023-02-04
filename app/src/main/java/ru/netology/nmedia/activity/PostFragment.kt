@@ -23,12 +23,11 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentPostBinding.inflate(layoutInflater)
-
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
         with(binding.scrollContent) {
-            viewModel.data.observe(viewLifecycleOwner) { posts ->
-                val post = posts.find { it.id == arguments?.longArg }
+            viewModel.data.observe(viewLifecycleOwner) { model ->
+                val post = model.posts.find { it.id == arguments?.longArg }
                 if (post != null) {
                     author.text = post.author
                     published.text = post.published
