@@ -28,22 +28,56 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         loadPosts()
     }
 
-    fun loadPosts() {
-        thread {
-            // Начинаем загрузку
-            _data.postValue(FeedModel(loading = true))
-            try {
-                // Данные успешно получены
-                val posts = repository.getAll()
-                FeedModel(posts = posts, empty = posts.isEmpty())
-            } catch (e: IOException) {
-                // Получена ошибка
-                FeedModel(error = true)
-            }.also(_data::postValue)
-        }
+    fun renameUrl(baseUrl: String, path: String, nameResource:String):String {
+        return "$baseUrl/$path/$nameResource"
     }
 
-    fun likeById(post: Post) =  thread { repository.likeById(post) }
+    fun loadPosts() {
+
+            _data.value = FeedModel(loading = true)
+
+            repository.getAll(object : PostRepository.Callback<List<Post>>{
+                override fun onSuccess(posts: List<Post>) {
+                    _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+                }
+
+                override fun onError(e: Exception) {
+                    _data.postValue(FeedModel(error = true))
+                }
+            })
+    }
+
+    fun likeById(post: Post) {
+        val post = data.value?.posts?.find { it.id == id } ?: emptyPost
+
+        repository.likeById(post, object : PostRepository.Callback<Post> {
+            override fun onSuccess(value: Post) {
+                _data.postValue(
+                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                        .map {
+                            if (it.id == id) value.copy(authorAvatar =
+                            if(!value.authorAvatar.isNullOrBlank()) {
+                                renameUrl(PostRepositoryImpl.BASE_URL,"avatars",value.authorAvatar)
+                            } else {
+                                null
+                            }, attachment =
+                            if(value.attachment != null) {
+                                value.attachment.copy(url = renameUrl(PostRepositoryImpl.BASE_URL,"images",value.attachment.url))
+                            } else {
+                                null
+                            })
+                            else it
+
+                        }
+                    )
+                )
+            }
+
+            override fun onError(e: Exception) {
+                _data.postValue(FeedModel(onFailure = true))
+            }
+        })
+    }
     fun shareById(post: Post) = thread { repository.shareById(post) }
     fun viewById(post: Post) = thread { repository.viewById(post) }
     fun removeById(id: Long) {
