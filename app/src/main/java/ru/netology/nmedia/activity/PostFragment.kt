@@ -32,7 +32,7 @@ class PostFragment : Fragment() {
                     author.text = post.author
                     published.text = post.published
                     content.text = post.content
-                    like.text = post.likeCount.toString()
+                    like.text = post.likes.toString()
                     like.isChecked = post.likeByMe
                     shareIt.text = post.share.toString()
                     shareIt.isChecked = post.shareByMe
@@ -46,7 +46,7 @@ class PostFragment : Fragment() {
                     }
 
                     like?.setOnClickListener {
-                        viewModel.likeById(post)
+                        viewModel.likeById(post.id)
                     }
 
                     shareIt?.setOnClickListener {

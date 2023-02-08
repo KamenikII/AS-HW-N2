@@ -11,7 +11,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.lang.Exception
 
-class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
+class PostRepositorySQLiteImpl : PostRepository {
 
     //играем с сервером
     private val client = OkHttpClient.Builder()
@@ -21,7 +21,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
     private val typeToken = object : TypeToken<List<Post>>() {}
 
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:9999"
+        const val BASE_URL = "http://10.0.2.2:9999"
         private val jsonType = "application/json".toMediaType()
     }
 

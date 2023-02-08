@@ -15,6 +15,7 @@ import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentFeedBinding
+import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
@@ -31,7 +32,7 @@ class FeedFragment : Fragment() {
         val adapter = PostsAdapter(
             object : OnPostListener {
                 override fun onLike(post: Post) { //все override ведут в ../viewmodelPostViewModel
-                    viewModel.likeById(post)
+                    viewModel.likeById(post.id)
                 }
 
                 override fun onShare(post: Post) {
@@ -68,13 +69,13 @@ class FeedFragment : Fragment() {
                     }
                 }
 
-//                override fun onPreviewPost(post: Post) {
-//                    findNavController().navigate(
-//                        R.id.action_feedFragment_to_postFragment,
-//                        Bundle().apply {
-//                            longArg = post.id
-//                    })
-//                }
+                override fun onPreviewPost(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_postFragment,
+                        Bundle().apply {
+                            longArg = post.id
+                    })
+                }
 
                 override fun view(post: Post) {
                     viewModel.viewById(post)

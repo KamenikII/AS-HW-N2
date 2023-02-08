@@ -8,7 +8,7 @@ object ConstantValues {
         id = 0,
         content = "",
         author = "Нетология",
-        likeCount = 0,
+        likes = 0,
         share = 0,
         viewIt = 0,
         published = "now"

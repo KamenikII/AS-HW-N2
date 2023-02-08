@@ -15,6 +15,7 @@ interface OnPostListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onPlayVideo(post: Post) {}
+    fun onPreviewPost(post: Post) {}
 }
 
 class PostsAdapter(

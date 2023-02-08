@@ -15,7 +15,8 @@ import java.io.IOException
 import kotlin.concurrent.thread
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
+    //private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
+    private val repository: PostRepository = PostRepositorySQLiteImpl()
     private val _data = MutableLiveData(FeedModel())
     val data: LiveData<FeedModel>
         get() = _data
@@ -47,7 +48,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             })
     }
 
-    fun likeById(post: Post) {
+    fun likeById(id: Long) {
         val post = data.value?.posts?.find { it.id == id } ?: emptyPost
 
         repository.likeById(post, object : PostRepository.Callback<Post> {
@@ -55,14 +56,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .map {
-                            if (it.id == id) value.copy(authorAvatar =
-                            if(!value.authorAvatar.isNullOrBlank()) {
-                                renameUrl(PostRepositoryImpl.BASE_URL,"avatars",value.authorAvatar)
+                            if (it.id == id) value.copy(authorImage =
+                            if(!value.authorImage.isNullOrBlank()) {
+                                renameUrl(PostRepositorySQLiteImpl.BASE_URL,"avatars",value.authorImage)
                             } else {
                                 null
                             }, attachment =
                             if(value.attachment != null) {
-                                value.attachment.copy(url = renameUrl(PostRepositoryImpl.BASE_URL,"images",value.attachment.url))
+                                value.attachment.copy(url = renameUrl(PostRepositorySQLiteImpl.BASE_URL,"images",value.attachment.url))
                             } else {
                                 null
                             })
@@ -81,27 +82,35 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun shareById(post: Post) = thread { repository.shareById(post) }
     fun viewById(post: Post) = thread { repository.viewById(post) }
     fun removeById(id: Long) {
-        thread {
-            // Оптимистичная модель
-            val old = _data.value?.posts.orEmpty()
-            _data.postValue(
-                _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                    .filter { it.id != id }
-                )
-            )
-            try {
-                repository.removeById(id)
-            } catch (e: IOException) {
-                _data.postValue(_data.value?.copy(posts = old))
+        val newState = _data.value?.posts.orEmpty()
+            .filter { it.id != id }
+        _data.postValue(FeedModel(posts = newState, loading = true))
+        repository.removeById(id, object : PostRepository.Callback<Unit> {
+            override fun onSuccess(value: Unit) {
+                _data.postValue(FeedModel(posts = newState, onSuccess = true))
             }
-        }
+
+            override fun onError(e: Exception) {
+                loadPosts()
+                _data.postValue(FeedModel(onFailure = true))
+            }
+        })
     }
     fun save() {
-        edited.value?.let {
-            thread {
-                repository.save(it)
-                _postCreated.postValue(Unit)
-            }
+        edited.value?.let { editedPost ->
+            val newStatePosts = _data.value?.posts.orEmpty()
+                .map { if (it.id == editedPost.id) editedPost else it }
+            repository.save(editedPost, object : PostRepository.Callback<Unit> {
+                override fun onSuccess(value: Unit) {
+                    _postCreated.postValue(Unit)
+                    _data.postValue(FeedModel(posts = newStatePosts, onSuccess = true))
+                }
+
+                override fun onError(e: Exception) {
+                    loadPosts()
+                    _data.postValue(FeedModel(onFailure = true))
+                }
+            })
         }
         edited.value = emptyPost
     }

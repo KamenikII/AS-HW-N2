@@ -1,7 +1,7 @@
 package ru.netology.nmedia.util
 
 object Numbers {
-    fun changeNumbers(count: Long): String {
+    fun changeNumbers(count: Long): String { //сокращаем значения в формате [___ ' '/К/М]
         return when (count) {
             in 0..999 -> "$count"
             in 1000..999_999 -> "${count / 1000}K"

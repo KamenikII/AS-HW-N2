@@ -4,17 +4,19 @@ import androidx.lifecycle.LiveData
 import ru.netology.nmedia.dataClasses.Post
 
 interface PostRepository {
-    fun getAll(callback: Callback<List<Post>>)
-    fun save(post: Post, callback: Callback<Unit>)
-    fun edit(post: Post, callback: Callback<Unit>)
-    fun removeById(id: Long, callback: Callback<Unit>)
+    //служебное
+    fun getAll(callback: Callback<List<Post>>) //возращает список фукнций
+    fun save(post: Post, callback: Callback<Unit>) //сохраняет пост
+    fun edit(post: Post, callback: Callback<Unit>) //изменяет пост
+    fun removeById(id: Long, callback: Callback<Unit>) //удаляет пост
 
-    fun shareById(post: Post)
-    fun viewById(post: Post)
-    fun likeById(post: Post, callback: Callback<Post>)
+    //пользовательское
+    fun shareById(post: Post) //поделиться постом
+    fun viewById(post: Post) //просмотрено
+    fun likeById(post: Post, callback: Callback<Post>) //лайк поста
 
     interface Callback<T> {
-        fun onSuccess(value: T) {}
-        fun onError(e: Exception) {}
+        fun onSuccess(value: T) {} //успех
+        fun onError(e: Exception) {} //ошибка
     }
 }
