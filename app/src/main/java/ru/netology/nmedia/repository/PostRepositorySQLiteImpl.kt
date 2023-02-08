@@ -76,7 +76,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
                 .build()
         }
 
-        client.newCall(request)
+        return client.newCall(request)
             .execute()
             .let { it.body?.string() ?: throw RuntimeException("body is null") }
             .let {
