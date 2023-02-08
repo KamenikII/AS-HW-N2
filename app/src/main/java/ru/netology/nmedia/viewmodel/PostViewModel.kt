@@ -44,7 +44,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(post: Post) =  thread {
-        _data.postValue(_data.value?.copy(posts = _data.value?.posts.orEmpty()).map {if (it.id == post.id) repository.likeById(post) else it})
+        _data.postValue(_data.value?.copy(posts = _data.value?.posts.orEmpty().map {if (it.id == post.id) repository.likeById(post) else it}))
     }
     fun shareById(post: Post) = thread { repository.shareById(post) }
     fun viewById(post: Post) = thread { repository.viewById(post) }

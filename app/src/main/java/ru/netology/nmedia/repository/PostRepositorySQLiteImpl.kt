@@ -63,7 +63,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
 
 
     //Лайкаем пост
-    override fun likeById(post:Post) {
+    override fun likeById(post:Post): Post {
         val request: Request = if (post.likeByMe) {
             Request.Builder()
                 .delete(gson.toJson(post).toRequestBody(jsonType))
