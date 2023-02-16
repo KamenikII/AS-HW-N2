@@ -1,5 +1,7 @@
 package ru.netology.nmedia.dataClasses
 
+import androidx.room.Embedded
+
 data class Post(
     //info about post
     val id: Long, //Уникальный индификатор поста
@@ -12,6 +14,7 @@ data class Post(
 
     //link and files
     val urlOfVideo: String? = null, //Ссылка на видео
+    @Embedded
     val attachment: Attachment? = null, //Приложенные файлы
 
     //statistic of post
@@ -26,7 +29,7 @@ data class Post(
 //files
 data class Attachment(
     val url: String, //URL приложения
-    val description: String?, //описание
+    val description: String? = "", //описание
     val type: AttachmentType, //тип
 )
 
