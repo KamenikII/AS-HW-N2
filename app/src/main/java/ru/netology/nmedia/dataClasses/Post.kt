@@ -12,7 +12,7 @@ data class Post(
 
     //link and files
     val urlOfVideo: String? = null, //Ссылка на видео
-    val attachment: Attachment, //Приложенные файлы
+    val attachment: Attachment? = null, //Приложенные файлы
 
     //statistic of post
     val likeByMe: Boolean = false, //поставлен ли пользователем лайк
