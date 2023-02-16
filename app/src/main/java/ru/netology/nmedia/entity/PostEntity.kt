@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.netology.nmedia.dataClasses.Attachment
 import ru.netology.nmedia.dataClasses.Post
+import ru.netology.nmedia.util.AttachmentEmbeddable
 
 @Entity
 data class PostEntity(
@@ -16,17 +17,16 @@ data class PostEntity(
     val published: String,
     val likedByMe: Boolean= false,
     val likeCount: Int = 0,
-    val sharedByMe: Boolean = false,
+    val shareByMe: Boolean = false,
     val share: Int = 0,
-    val viewedItByMe: Boolean = false,
+    val viewItByMe: Boolean = false,
     val viewIt: Int = 0,
     val urlOfVideo: String? = null,
-    @Embedded
-    val attachment: Attachment? = null,
+    val attachment: AttachmentEmbeddable?,
 ) {
     fun toPost() = Post(
         id, author, authorImage, content, published, urlOfVideo, attachment, likedByMe, likeCount,
-        sharedByMe, share, viewedItByMe, viewIt
+        shareByMe, share, viewItByMe, viewIt
     )
 
     companion object {
