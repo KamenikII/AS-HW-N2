@@ -1,20 +1,40 @@
 package ru.netology.nmedia.dataClasses
 
-data class Post (
-    //info about post
-    val id : Long,
-    val author: String = "Netology",
-    val content: String,
-    val published: String,
+import androidx.room.Embedded
 
-    //statistic of post
-    val likeByMe: Boolean = false,
-    val likeCount: Int = 0,
-    val shareByMe: Boolean = false,
-    val share: Int = 0,
-    val viewItByMe: Boolean = false,
-    val viewIt: Int = 0,
+data class Post(
+    //info about post
+    val id: Long, //Уникальный индификатор поста
+    val author: String = "Адмен XD", //Имя автора
+    val authorImage: String? = null, //Аватарка автора
+    val published: String, //Дата публикации
+
+    //content
+    val content: String, //Текст поста
 
     //link and files
-    val urlOfVideo: String? = null
+    val urlOfVideo: String? = null, //Ссылка на видео
+    @Embedded
+    val attachment: Attachment? = null, //Приложенные файлы
+
+    //statistic of post
+    val likeByMe: Boolean = false, //поставлен ли пользователем лайк
+    val likes: Int = 0,// Like = Like(), //кол-во лайков
+    val shareByMe: Boolean = false, //делился ли пользователь постом
+    val share: Int = 0,// Share = Share(), //кол-во репостов
+    val viewItByMe: Boolean = false, //просмотрел ли пользователь пост
+    val viewIt: Int = 0, //View = View(), //кол-во просмотров
 )
+
+//files
+data class Attachment(
+    val url: String, //URL приложения
+    val description: String? = "", //описание
+    val type: AttachmentType, //тип
+)
+
+//type of files
+enum class AttachmentType {
+    IMAGE, //картинка
+    VIDEO //видео
+}
