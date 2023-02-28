@@ -114,6 +114,7 @@ class PostRepositorySQLiteImpl : PostRepository {
                 .build()
         }
 
+
         client.newCall(request)
             .enqueue(object : Callback {
                 override fun onResponse(call: Call, response: Response) {

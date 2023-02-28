@@ -48,6 +48,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             })
     }
 
+
     fun likeById(id: Long) {
         val post = data.value?.posts?.find { it.id == id } ?: emptyPost
 
