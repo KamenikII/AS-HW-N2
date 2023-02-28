@@ -25,10 +25,10 @@
             android:id="@+id/fab_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/margin16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="@dimen/fab_margin" />
+            android:layout_marginStart="@dimen/margin16dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/ok"
@@ -38,8 +38,8 @@
             app:srcCompat="@drawable/ic_ok_24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="@dimen/fab_margin" />
+            android:layout_marginEnd="@dimen/margin16dp"
+            android:layout_marginBottom="@dimen/margin16dp" />
 
         <ProgressBar
             android:id="@+id/saving_progress_bar"
