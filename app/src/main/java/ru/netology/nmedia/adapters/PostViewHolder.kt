@@ -3,8 +3,12 @@ package ru.netology.nmedia.adapters
 import android.net.Uri
 import android.view.View
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.R
+import ru.netology.nmedia.dao.FloatingValues.renameUrl
+import ru.netology.nmedia.dataClasses.AttachmentType
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentCardPostBinding
 import ru.netology.nmedia.util.Numbers
@@ -25,11 +29,27 @@ class PostViewHolder(
             shareIt.isChecked = post.shareByMe //поделился ли пользователь
             view.text = post.viewIt.toString() //кол-во просмотров
             view.isChecked = post.viewItByMe //видел ли пользователь
-            if (!post.urlOfVideo.isNullOrBlank()) { //если есть ссылка видео, то отобразить
-                videoLayout.visibility = View.VISIBLE
+            Glide.with(icon)
+                .load(renameUrl(post.authorImage ?: "","avatars"))
+                .placeholder(R.drawable.ic_img_not_support)
+                .error(R.drawable.ic_not_avatar)
+                .circleCrop()
+                .timeout(10_000)
+                .into(icon)
+            if (post.attachment != null) {
+                attachmentContent.isVisible = true
+                Glide.with(imageAttachment)
+                    .load(renameUrl(post.attachment.url,"media"))
+                    .placeholder(R.drawable.ic_img_not_support)
+                    .timeout(10_000)
+                    .into(imageAttachment)
+                descriptionAttachment.text = post.attachment.description
+                playButtonVideoPost.isVisible = (post.attachment.type == AttachmentType.VIDEO)
             } else {
-                videoLayout.visibility = View.GONE
+                attachmentContent.visibility = View.GONE
             }
+
+
             //like listener
             like.setOnClickListener{
                 onPostListener.onLike(post)
@@ -68,73 +88,6 @@ class PostViewHolder(
                     }
                 }.show()
             }
-
-            //Video by URL
-            if (post.urlOfVideo != null) { //если есть ссылка на видео, отображать
-                videoLayout.visibility = View.VISIBLE
-            } else {
-                videoLayout.visibility = View.GONE
-            }
-
-            //запуск видео listener
-            videoLayout.setOnClickListener {
-                onPostListener.onPlayVideo(post)
-            }
         }
     }
-
-//    private fun postListener(post: Post) {
-//        with(binding) {
-//            //like listener
-//            like.setOnClickListener{
-//                like.isClickable = false //чтоб не было повтрного вопроса
-//                like.text = post.likes.toString()
-//                like.isChecked = post.likeByMe
-//                onPostListener.onLike(post)
-//            }
-//
-//            //share listener
-//            shareIt.setOnClickListener{
-//                shareIt.text = post.share.toString()
-//                shareIt.isChecked = post.shareByMe
-//                onPostListener.onShare(post)
-//            }
-//
-//            //view listener
-//            view.text = post.viewIt.toString()
-//            onPostListener.view(post)
-//
-//            //menu listener
-//            moreActions.setOnClickListener {
-//                PopupMenu(it.context, it)
-//                    .apply {
-//                        inflate(R.menu.options_post) //при нажатие открывается менюшка res/menu/optional_post.xml
-//                        setOnMenuItemClickListener { item ->
-//                            when (item.itemId) {
-//                                R.id.remove -> {
-//                                    onPostListener.onRemove(post)
-//                                    true
-//                                }
-//
-//                                R.id.edit -> {
-//                                    onPostListener.onEdit(post)
-//                                    true
-//                                }
-//
-//                                else -> false
-//                            }
-//                        }
-//                }.show()
-//            }
-//
-//            //video by URL listener
-//            videoLayout.setOnClickListener {
-//                onPostListener.onPlayVideo(post)
-//            }
-//
-////            cardContent.setOnClickListener {
-////                onPostListener.onPreviewPost(post)
-////            }
-//        }
-//    }
 }
