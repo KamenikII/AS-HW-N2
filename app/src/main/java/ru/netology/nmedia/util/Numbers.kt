@@ -1,5 +1,7 @@
 package ru.netology.nmedia.util
 
+/** ОБЪЕКТ ДЛЯ РАБОТЫ НАД ЧИСЛОВЫМИ ЗНАЧЕНИЯМИ И ИХ СОКРАЩЕНИЕМ */
+
 object Numbers {
     fun changeNumbers(count: Long): String { //сокращаем значения в формате [___ ' '/К/М]
         return when (count) {

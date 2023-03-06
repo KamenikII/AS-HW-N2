@@ -1,5 +1,7 @@
 package ru.netology.nmedia.dao
 
+/** КЛЮЧ-ЗНАЧЕНИЯ ДЛЯ БД */
+
 object PostColumns {
     const val TABLE = "posts"
     const val COLUMN_ID = "id"

@@ -3,6 +3,8 @@ package ru.netology.nmedia.util
 import ru.netology.nmedia.dataClasses.Attachment
 import ru.netology.nmedia.dataClasses.AttachmentType
 
+/** КЛАСС ОТВЕЧАЮЩИЙ ЗА ПРИЛОЖЕНИЯ К ПОСТУ */
+
 data class AttachmentEmbeddable(
     var url: String,
     var type: AttachmentType,

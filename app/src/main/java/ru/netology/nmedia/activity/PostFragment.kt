@@ -20,6 +20,8 @@ import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+/** ДАННЫЙ КЛАСС РАБОТАЕТ С ОТДЕЛЬНЫХ ПОСТОМ, ЕГО ОТРИСОВКОЙ И ВЫВОДОМ ИНФОРМАЦИИ */
+
 class PostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +35,7 @@ class PostFragment : Fragment() {
             viewModel.data.observe(viewLifecycleOwner) { model ->
                 val post = model.posts.find { it.id == arguments?.longArg }
                 if (post != null) {
+                    //информация о посте
                     author.text = post.author
                     published.text = post.published
                     content.text = post.content
@@ -42,6 +45,7 @@ class PostFragment : Fragment() {
                     shareIt.isChecked = post.shareByMe
                     view.text = post.viewIt.toString()
                     view.isChecked = post.viewItByMe
+                    //работаем с иконкой
                     Glide.with(icon)
                         .load(FloatingValues.renameUrl(post.authorImage ?: "", "avatars"))
                         .placeholder(R.drawable.ic_img_not_support)
@@ -50,6 +54,7 @@ class PostFragment : Fragment() {
                         .timeout(10_000)
                         .into(icon)
 
+                    //приложения к посту (фото/видео)
                     if (post.attachment != null) {
                         attachmentContent.visibility = View.VISIBLE
                         Glide.with(imageAttachment)
@@ -62,10 +67,12 @@ class PostFragment : Fragment() {
                         attachmentContent.visibility = View.GONE
                     }
 
+                    //лайкнули пост
                     like?.setOnClickListener {
                         viewModel.likeById(post.id)
                     }
 
+                    //постом поделились
                     shareIt?.setOnClickListener {
                         val intent = Intent().apply {
                             action = Intent.ACTION_SEND
@@ -78,6 +85,7 @@ class PostFragment : Fragment() {
                         startActivity(shareIntent)
                     }
 
+                    //доп меню поста (удалить, изменить)
                     moreActions?.setOnClickListener {
                         PopupMenu(binding.root.context, binding.scrollContent.moreActions).apply {
                             inflate(R.menu.options_post)
@@ -102,6 +110,7 @@ class PostFragment : Fragment() {
                         }.show()
                     }
 
+                    //включили видео
                     playButtonVideoPost.setOnClickListener {
                         val playIntent = Intent(Intent.ACTION_VIEW, Uri.parse(post.urlOfVideo))
                         if (playIntent.resolveActivity(requireContext().packageManager) != null) {

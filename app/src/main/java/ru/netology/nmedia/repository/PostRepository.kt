@@ -3,6 +3,8 @@ package ru.netology.nmedia.repository
 import androidx.lifecycle.LiveData
 import ru.netology.nmedia.dataClasses.Post
 
+/** ИНТЕРФЕЙС, В КОТОРОМ ОПИСАНЫ ВСЕ МЕТОДЫ РАБОТЫ С ПОСТОМ */
+
 interface PostRepository {
     //служебное
     fun getAll(callback: Callback<List<Post>>) //возращает список фукнций

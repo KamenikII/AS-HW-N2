@@ -12,13 +12,17 @@ import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.nmedia.R
 import ru.netology.nmedia.util.Companion.Companion.textArg
 
+/** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЗАПУСК ПРИЛОЖЕНИЯ И РАБОТУ С СЕРВИСАМИ GOOGLE */
+
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
+    //запуск приложения
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkGoogleApiAvailability()
     }
 
+    //работаем с сервисами гугл
     private fun checkGoogleApiAvailability() {
         with(GoogleApiAvailability.getInstance()) {
             val code = isGooglePlayServicesAvailable(this@AppActivity)

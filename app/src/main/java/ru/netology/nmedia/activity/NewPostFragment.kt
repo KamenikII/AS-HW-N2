@@ -14,12 +14,15 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.Companion.Companion.textArg
 
+/** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА СОЗДАНИЕ НОВОГО ПОСТА */
+
 class NewPostFragment : Fragment() {
     private val binding by lazy { FragmentNewPostBinding.inflate(layoutInflater) }
     private val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
 
+    //редачим / создаём пост
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
