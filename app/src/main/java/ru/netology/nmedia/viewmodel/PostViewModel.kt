@@ -12,6 +12,7 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
+import java.net.ConnectException
 import kotlin.concurrent.thread
 
 /** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
@@ -26,9 +27,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
+    var errorOperation = MutableLiveData(0) //номер функции с ошибкой
+    var errorPostId = MutableLiveData(-1L) // id поста, где произошла ошибка
 
     init {
         loadPosts()
+        errorOperation.value = 0
     }
 
     fun renameUrl(baseUrl: String, path: String, nameResource:String):String {
@@ -128,4 +132,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
         edited.value = edited.value?.copy(content = text)
     }
+
 }

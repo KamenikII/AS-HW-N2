@@ -12,4 +12,6 @@ interface OnPostListener {
     fun onRemove(post: Post) {}
     fun onPlayVideo(post: Post) {}
     fun onPreviewPost(post: Post) {}
+    fun onPost(id: Long) {}
+    fun onReload() {}
 }

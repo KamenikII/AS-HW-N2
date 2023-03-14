@@ -13,4 +13,5 @@ data class FeedModel(
     val refreshing: Boolean = false, //обновление
     val onSuccess: Boolean = false, //удача выполнения
     val onFailure: Boolean = false, //ошибка
+    val connectionError: Boolean = false
 )

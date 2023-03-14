@@ -30,6 +30,9 @@ class FeedFragment : Fragment() {
         //рисуем фрагмент fragment_feed
         val binding = FragmentFeedBinding.inflate(layoutInflater)
 
+        var errOp = 0
+        var errId = 0L
+
         //viewmodel
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
@@ -90,6 +93,12 @@ class FeedFragment : Fragment() {
                 override fun view(post: Post) {
                     viewModel.viewById(post)
                 }
+
+                override fun onReload() {
+                    viewModel.loadPosts()
+                }
+
+
             }
         )
 

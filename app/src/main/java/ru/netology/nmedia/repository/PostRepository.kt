@@ -21,4 +21,11 @@ interface PostRepository {
         fun onSuccess(value: T) {} //успех
         fun onError(e: Exception) {} //ошибка
     }
+
+//    interface CallbackUnit<T> {
+//        fun onError(e : Exception)
+//        fun onSuccess() {}
+//        fun onSuccess()
+//        fun onError(e: Exception) {}
+//    }
 }
