@@ -22,6 +22,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         checkGoogleApiAvailability()
     }
 
+
     //работаем с сервисами гугл
     private fun checkGoogleApiAvailability() {
         with(GoogleApiAvailability.getInstance()) {
@@ -41,18 +42,4 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             println(it)
         }
     }
-
-//    override fun onBackPressed() {
-//        if (currentFragment == "NewPostFragment") {
-//            findViewById<FloatingActionButton>(R.id.fab_cancel).callOnClick()
-//            return
-//        }
-//        super.onBackPressed()
-//    }
-//
-//    override fun onStop() {
-//        currentFragment = ""
-//        textNewPost = ""
-//        super.onStop()
-//    }
 }

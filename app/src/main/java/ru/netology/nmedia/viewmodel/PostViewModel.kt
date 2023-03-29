@@ -28,9 +28,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+
     init {
         loadPosts()
     }
+
 
     fun renameUrl(baseUrl: String, path: String, nameResource:String):String {
         return "$baseUrl/$path/$nameResource"

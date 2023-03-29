@@ -35,6 +35,7 @@ class PostFragment : Fragment() {
             viewModel.data.observe(viewLifecycleOwner) { model ->
                 val post = model.posts.find { it.id == arguments?.longArg }
                 if (post != null) {
+
                     //информация о посте
                     author.text = post.author
                     published.text = post.published
@@ -45,6 +46,7 @@ class PostFragment : Fragment() {
                     shareIt.isChecked = post.shareByMe
                     view.text = post.viewIt.toString()
                     view.isChecked = post.viewItByMe
+
                     //работаем с иконкой
                     Glide.with(icon)
                         .load(FloatingValues.renameUrl(post.authorImage ?: "", "avatars"))
