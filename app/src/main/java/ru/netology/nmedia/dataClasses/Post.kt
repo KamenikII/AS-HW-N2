@@ -2,6 +2,8 @@ package ru.netology.nmedia.dataClasses
 
 import androidx.room.Embedded
 
+/** ДАТАКЛАСС, КОТОРЫЙ ОБОЗНАЧАЕТ СОДЕРЖАНИЯ (ЗНАЧЕНИЯ) ПОСТА */
+
 data class Post(
     //info about post
     val id: Long, //Уникальный индификатор поста

@@ -12,7 +12,10 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.IOException
+import java.net.ConnectException
 import kotlin.concurrent.thread
+
+/** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     //private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
@@ -25,9 +28,11 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+
     init {
         loadPosts()
     }
+
 
     fun renameUrl(baseUrl: String, path: String, nameResource:String):String {
         return "$baseUrl/$path/$nameResource"
@@ -127,4 +132,5 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
         edited.value = edited.value?.copy(content = text)
     }
+
 }

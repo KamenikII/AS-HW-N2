@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import ru.netology.nmedia.entity.PostEntity
 
+/** ОБЪЕКТ ДЛЯ РАБОТЫ С БД И СЕРВЕРОМ */
+
 @Dao
 interface PostDao {
     @Query("SELECT * FROM PostEntity ORDER BY id DESC")

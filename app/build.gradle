@@ -25,11 +25,14 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "BASE_URL", '"http://192.168.0.204:9999"'
+            manifestPlaceholders.usesCleartextTraffic = true
         }
 
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders.usesCleartextTraffic = false
+            buildConfigField "String", "BASE_URL", '"https://netomedia.ru"'
         }
     }
 
@@ -45,53 +48,69 @@ android {
 
 dependencies {
     def core_version = "1.9.0"
-    def appcompat_version = "1.6.0"
-    def mdc_version = "1.7.0"
-    def constraintlayout_version = "2.1.4"
-    def recyclerview_version = "1.2.1"
-    def junit_version = "4.13.2"
-    def ext_junit_version = "1.1.4"
-    def espresso_core_version = "3.5.0"
-    def activity_version = "1.6.1"
-    def lifecycle_version = "2.5.1"
-    def fragment_version = "1.5.5"
-    def gson_version = "2.8.9"
-    def room_ver = "2.5.0"
-    def firebase_version = "31.1.1"
-    def play_services_base_version = "18.1.0"
+    implementation "androidx.core:core-ktx:$core_version"
 
     //room
+    def room_ver = "2.5.0"
     implementation "androidx.room:room-runtime:$room_ver"
     kapt "androidx.room:room-compiler:$room_ver"
 
-    implementation "androidx.core:core-ktx:$core_version"
+    //visual
+    def mdc_version = "1.7.0"
+    def constraintlayout_version = "2.1.4"
+    def appcompat_version = "1.6.0"
+    def recyclerview_version = "1.2.1"
+    def activity_version = "1.6.1"
+    implementation "androidx.activity:activity-ktx:$activity_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "com.google.android.material:material:$mdc_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+
+    //lifecycle
+    def lifecycle_version = "2.5.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
-    implementation "androidx.fragment:fragment-ktx:$fragment_version"
-    implementation "com.google.code.gson:gson:$gson_version"
 
+    //fragment & navigation
+    def fragment_version = "1.5.5"
+    def navigation_version = "2.5.3"
+    def swipefresh_version = "1.1.0"
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swipefresh_version"
+
+    //test
+    def junit_version = "4.13.2"
+    def ext_junit_version = "1.1.4"
+    def espresso_core_version = "3.5.0"
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core_version"
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-
     //firebase
+    def firebase_version = "31.1.1"
+    def play_services_base_version = "18.1.0"
     implementation platform("com.google.firebase:firebase-bom:$firebase_version")
     implementation "com.google.firebase:firebase-messaging-ktx"
     implementation "com.google.android.gms:play-services-base:$play_services_base_version"
 
+    //files
+    def gson_version = "2.8.9"
+    implementation "com.google.code.gson:gson:$gson_version"
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
 
     //glide
     implementation 'com.github.bumptech.glide:glide:4.14.2'
+
+    //retrofit (CRUD)
+    def retrofit_version = "2.9.0"
+    def retrofitgson_version = "2.9.0"
+    def okhttp3_version = "4.10.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitgson_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
 }

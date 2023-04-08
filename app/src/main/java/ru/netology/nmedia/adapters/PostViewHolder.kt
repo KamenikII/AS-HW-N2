@@ -1,6 +1,5 @@
 package ru.netology.nmedia.adapters
 
-import android.net.Uri
 import android.view.View
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -11,7 +10,8 @@ import ru.netology.nmedia.dao.FloatingValues.renameUrl
 import ru.netology.nmedia.dataClasses.AttachmentType
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentCardPostBinding
-import ru.netology.nmedia.util.Numbers
+
+/** РЕНДЕРИНГ ПОСТОВ, ИХ ВНЕШНИЙ ВИД, "СЛУШАЕМ" НАЖАТИЯ */
 
 class PostViewHolder(
     private val binding: FragmentCardPostBinding,

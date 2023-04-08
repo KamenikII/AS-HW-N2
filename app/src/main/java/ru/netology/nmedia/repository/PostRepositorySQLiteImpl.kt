@@ -3,13 +3,14 @@ package ru.netology.nmedia.repository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
-import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dataClasses.Post
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.lang.Exception
+
+/** КЛАСС, ОТВЕЧАЮЩИЙ ЗА РЕАЛИЗАЦИЮ МЕТОДОВ РАБОТЫ С ПОСТОМ, РАБОТАЕТ С СЕРВЕРОМ И БД */
 
 class PostRepositorySQLiteImpl : PostRepository {
 
@@ -38,9 +39,10 @@ class PostRepositorySQLiteImpl : PostRepository {
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    if(!response.isSuccessful) {
-                        callback.onError(Exception(response.message))
-                        return
+                    when {
+                        !response.isSuccessful -> callback.onError(Exception(response.message))
+                        response.body == null -> callback.onError(Exception("Body is null"))
+                        else -> callback.onSuccess((response.body?.string() ?: emptyList<Post>()) as List<Post>)
                     }
 
                     try {

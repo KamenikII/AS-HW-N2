@@ -19,22 +19,31 @@ import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+/** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЛЕНТУ НОВОСТЕЙ, РАБОТУ С ПОСТАМИ И ОТРИСОВКУ, А ТАК ЖЕ НАВИГАЦИЮ */
+
 class FeedFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //рисуем фрагмент fragment_feed
         val binding = FragmentFeedBinding.inflate(layoutInflater)
 
+        var errOp = 0
+        var errId = 0L
+
+        //viewmodel
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
         val adapter = PostsAdapter(
             object : OnPostListener {
+                //нажали лайк, переходим во viewmodel
                 override fun onLike(post: Post) { //все override ведут в ../viewmodelPostViewModel
                     viewModel.likeById(post.id)
                 }
 
+                //поделились записью, переходим во viewmodel + БД
                 override fun onShare(post: Post) {
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
@@ -49,10 +58,12 @@ class FeedFragment : Fragment() {
                     viewModel.shareById(post)
                 }
 
+                //удалили пост, переходим во viewmodel
                 override fun onRemove(post: Post) {
                     viewModel.removeById(post.id)
                 }
 
+                //изменили пост, переходим во viewmodel
                 override fun onEdit(post: Post) {
                     viewModel.edit(post)
                     findNavController().navigate(
@@ -62,6 +73,7 @@ class FeedFragment : Fragment() {
                         })
                 }
 
+                //запустили видео
                 override fun onPlayVideo(post: Post) {
                     val playIntent = Intent(Intent.ACTION_VIEW, Uri.parse(post.urlOfVideo))
                     if (playIntent.resolveActivity(requireContext().packageManager) != null) {
@@ -77,9 +89,16 @@ class FeedFragment : Fragment() {
                     })
                 }
 
+                //запись просмотрена
                 override fun view(post: Post) {
                     viewModel.viewById(post)
                 }
+
+                override fun onReload() {
+                    viewModel.loadPosts()
+                }
+
+
             }
         )
 
@@ -96,6 +115,7 @@ class FeedFragment : Fragment() {
             viewModel.loadPosts()
         }
 
+        //нажали кнопку создания нового поста
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }

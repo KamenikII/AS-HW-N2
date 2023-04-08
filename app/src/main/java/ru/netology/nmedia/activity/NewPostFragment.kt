@@ -14,12 +14,15 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.Companion.Companion.textArg
 
+/** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА СОЗДАНИЕ НОВОГО ПОСТА */
+
 class NewPostFragment : Fragment() {
     private val binding by lazy { FragmentNewPostBinding.inflate(layoutInflater) }
     private val viewModel: PostViewModel by viewModels(
         ownerProducer = ::requireParentFragment
     )
 
+    //редачим / создаём пост
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,56 +38,7 @@ class NewPostFragment : Fragment() {
                 AndroidUtils.hideKeyboard(requireView())
                 findNavController().navigateUp()
             }
-
-//            if (edit.text.isNullOrBlank()) {
-//                edit.setText(textNewPost)
-//            }
-//
-//            edit.requestFocus()
-//
-//
-//            clickListeners()
-
             return root
         }
     }
-
-//    override fun onStart() {
-//        currentFragment = javaClass.simpleName
-//        super.onStart()
-//    }
-
-//    private fun clickListeners() {
-//        with(binding) {
-//
-//            fabComplete.setOnClickListener {
-//                if (!edit.text.isNullOrBlank()) {
-//                    val content = edit.text.toString()
-//                    viewModel.changeContent(content)
-//                    viewModel.save()
-//                }
-//                hideKeyboard(root)
-//                fabComplete.isVisible = false
-//                fabCancel.isVisible = false
-//                edit.isVisible = false
-//                savingProgressBar.isVisible = true
-//            }
-//            viewModel.postCreated.observe(viewLifecycleOwner) {
-//                viewModel.loadPosts()
-//                findNavController().navigateUp()
-//            }
-//
-//            fabCancel.setOnClickListener {
-//                if (viewModel.getEditedId() == 0L) {
-//                    textNewPost = edit.text.toString()
-//                } else {
-//                    edit.text.clear()
-//                    viewModel.save()
-//                }
-//                hideKeyboard(root)
-//                findNavController().navigateUp()
-//            }
-//
-//        }
-//    }
 }
