@@ -32,8 +32,8 @@ class PostFragment : Fragment() {
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
         with(binding.scrollContent) {
-            viewModel.data.observe(viewLifecycleOwner) { model ->
-                val post = model.posts.find { it.id == arguments?.longArg }
+            viewModel.data.observe(viewLifecycleOwner) { state ->
+                val post = state.posts.find { it.id == arguments?.longArg }
                 if (post != null) {
 
                     //информация о посте

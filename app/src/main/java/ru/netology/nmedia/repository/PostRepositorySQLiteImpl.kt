@@ -1,5 +1,7 @@
 package ru.netology.nmedia.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
@@ -7,12 +9,15 @@ import ru.netology.nmedia.dataClasses.Post
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.entity.PostEntity
 import java.io.IOException
 import java.lang.Exception
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА РЕАЛИЗАЦИЮ МЕТОДОВ РАБОТЫ С ПОСТОМ, РАБОТАЕТ С СЕРВЕРОМ И БД */
 
-class PostRepositorySQLiteImpl : PostRepository {
+class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
     //играем с сервером
     private val client = OkHttpClient.Builder()
@@ -26,131 +31,41 @@ class PostRepositorySQLiteImpl : PostRepository {
         private val jsonType = "application/json".toMediaType()
     }
 
-    //получаем список постов
-    override fun getAll(callback: PostRepository.Callback<List<Post>>) {
-        val request: Request = Request.Builder()
-            .url("${BASE_URL}/api/slow/posts")
-            .build()
+    override fun data() = postDao.getAll().map {it.map(PostEntity::toDto)}
 
-        client.newCall(request)
-            .enqueue(object :Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onError(e)
-                }
+    override suspend fun getAll() {
+        //запрашиваем с сервера
+        val response = PostsApi.retrofitService.getAll()
 
-                override fun onResponse(call: Call, response: Response) {
-                    when {
-                        !response.isSuccessful -> callback.onError(Exception(response.message))
-                        response.body == null -> callback.onError(Exception("Body is null"))
-                        else -> callback.onSuccess((response.body?.string() ?: emptyList<Post>()) as List<Post>)
-                    }
+        //ловим ошибки
+        if (!response.isSuccessful) throw RuntimeException("Api error")
+        response.body() ?: throw RuntimeException("Body is null")
 
-                    try {
-                        val data = response.body?.string() ?: throw RuntimeException("body is null")
-                        callback.onSuccess(gson.fromJson(data, typeToken.type))
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-            })
+        //записываем данные с сервера
+        postDao.insert(response.body()!!.map {PostEntity.fromDto(it)})
     }
 
-    //сохраняем пост
-    override fun save(post: Post, callback: PostRepository.Callback<Unit>) {
-        val request: Request = Request.Builder()
-            .post(gson.toJson(post).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/slow/posts")
-            .build()
-
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    try {
-                        callback.onSuccess(Unit)
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun save(post: Post) {
+        TODO("Not yet implemented")
     }
 
-    //удаление поста
-    override fun removeById(id: Long, callback: PostRepository.Callback<Unit>) {
-        val request: Request = Request.Builder()
-            .delete()
-            .url("${BASE_URL}/api/slow/posts/$id")
-            .build()
-
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    try {
-                        callback.onSuccess(Unit)
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun edit(post: Post) {
+        TODO("Not yet implemented")
     }
 
-
-    //Лайкаем пост
-    override fun likeById(post:Post, callback: PostRepository.Callback<Post>) {
-        val request: Request = if (post.likeByMe) {
-            Request.Builder()
-                .delete(gson.toJson(post).toRequestBody(jsonType))
-                .url("${BASE_URL}/api/posts/${post.id}/likeCount")
-                .build()
-        } else {
-            Request.Builder()
-                .post(gson.toJson(post).toRequestBody(jsonType))
-                .url("${BASE_URL}/api/slow/posts/${post.id}/likeCount")
-                .build()
-        }
-
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onResponse(call: Call, response: Response) {
-                    val body = response.body?.string() ?: throw RuntimeException("body is null")
-                    try {
-                        callback.onSuccess(gson.fromJson(body, Post::class.java))
-                    } catch (e: Exception) {
-                        callback.onError(e)
-                    }
-                }
-
-                override fun onFailure(call: Call, e: IOException) {
-                    callback.onError(e)
-                }
-            })
+    override suspend fun removeById(id: Long) {
+        TODO("Not yet implemented")
     }
 
-    //поделиться постом
-    override fun shareById(post: Post) {
-        val request: Request = Request.Builder()
-            .post(gson.toJson(post).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/slow/posts/${post.id}/share")
-            .build()
+    override suspend fun shareById(post: Post) {
+        TODO("Not yet implemented")
     }
 
-    //просмотры поста пользователем
-    override fun viewById(post: Post) {
-        val request: Request = Request.Builder()
-            .post(gson.toJson(post).toRequestBody(jsonType))
-            .url("${BASE_URL}/api/slow/posts/${post.id}/viewIt")
-            .build()
+    override suspend fun viewById(post: Post) {
+        TODO("Not yet implemented")
     }
 
-    //редактор поста
-    override fun edit(post: Post, callback: PostRepository.Callback<Unit>) {
-        save(post, callback)
+    override suspend fun likeById(post: Post) {
+        TODO("Not yet implemented")
     }
 }
