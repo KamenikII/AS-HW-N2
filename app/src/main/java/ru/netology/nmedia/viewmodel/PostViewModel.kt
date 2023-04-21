@@ -65,6 +65,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun likeById(id: Long) = viewModelScope.launch {
+
         val post = data.value?.posts?.find { it.id == id } ?: emptyPost
         try {
             _state.value = FeedModelState(loading = true)
