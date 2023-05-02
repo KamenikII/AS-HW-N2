@@ -1,124 +1,126 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
+import retrofit2.Response.error
 import ru.netology.nmedia.dao.ConstantValues.emptyPost
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.model.FeedModel
+import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 import ru.netology.nmedia.util.SingleLiveEvent
-import java.io.IOException
-import java.net.ConnectException
 import kotlin.concurrent.thread
 
 /** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
-    //private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
-    private val repository: PostRepository = PostRepositorySQLiteImpl()
-    private val _data = MutableLiveData(FeedModel())
-    val data: LiveData<FeedModel>
-        get() = _data
+    private val repository: PostRepository = PostRepositorySQLiteImpl(AppDb.getInstance(application).postDao())
+
+    //состояние
+    private val _state = MutableLiveData(FeedModelState())
+    val state: LiveData<FeedModelState>
+        get() = _state
+
+    val data: LiveData<FeedModel> = repository.data().map { FeedModel(it, it.isEmpty())}
+
     private val edited = MutableLiveData(emptyPost)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-
     init {
         loadPosts()
     }
-
 
     fun renameUrl(baseUrl: String, path: String, nameResource:String):String {
         return "$baseUrl/$path/$nameResource"
     }
 
-    fun loadPosts() {
-
-            _data.value = FeedModel(loading = true)
-
-            repository.getAll(object : PostRepository.Callback<List<Post>>{
-                override fun onSuccess(posts: List<Post>) {
-                    _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
-                }
-
-                override fun onError(e: Exception) {
-                    _data.postValue(FeedModel(error = true))
-                }
-            })
-    }
-
-
-    fun likeById(id: Long) {
-        val post = data.value?.posts?.find { it.id == id } ?: emptyPost
-
-        repository.likeById(post, object : PostRepository.Callback<Post> {
-            override fun onSuccess(value: Post) {
-                _data.postValue(
-                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                        .map {
-                            if (it.id == id) value.copy(authorImage =
-                            if(!value.authorImage.isNullOrBlank()) {
-                                renameUrl(PostRepositorySQLiteImpl.BASE_URL,"avatars",value.authorImage)
-                            } else {
-                                null
-                            }, attachment =
-                            if(value.attachment != null) {
-                                value.attachment.copy(url = renameUrl(PostRepositorySQLiteImpl.BASE_URL,"images",value.attachment.url))
-                            } else {
-                                null
-                            })
-                            else it
-
-                        }
-                    )
-                )
-            }
-
-            override fun onError(e: Exception) {
-                _data.postValue(FeedModel(onFailure = true))
-            }
-        })
-    }
-    fun shareById(post: Post) = thread { repository.shareById(post) }
-    fun viewById(post: Post) = thread { repository.viewById(post) }
-    fun removeById(id: Long) {
-        val newState = _data.value?.posts.orEmpty()
-            .filter { it.id != id }
-        _data.postValue(FeedModel(posts = newState, loading = true))
-        repository.removeById(id, object : PostRepository.Callback<Unit> {
-            override fun onSuccess(value: Unit) {
-                _data.postValue(FeedModel(posts = newState, onSuccess = true))
-            }
-
-            override fun onError(e: Exception) {
-                loadPosts()
-                _data.postValue(FeedModel(onFailure = true))
-            }
-        })
-    }
-    fun save() {
-        edited.value?.let { editedPost ->
-            val newStatePosts = _data.value?.posts.orEmpty()
-                .map { if (it.id == editedPost.id) editedPost else it }
-            repository.save(editedPost, object : PostRepository.Callback<Unit> {
-                override fun onSuccess(value: Unit) {
-                    _postCreated.postValue(Unit)
-                    _data.postValue(FeedModel(posts = newStatePosts, onSuccess = true))
-                }
-
-                override fun onError(e: Exception) {
-                    loadPosts()
-                    _data.postValue(FeedModel(onFailure = true))
-                }
-            })
+    fun loadPosts() = viewModelScope.launch { //подключили карутину
+        try {
+            //обозначаем лоудинг
+            _state.value = FeedModelState(loading = true)
+            //отправка запроса
+            repository.getAll()
+            _state.value = FeedModelState()
+        } catch (e:Exception) {
+            //выкидываем ошибку
+            _state.value = FeedModelState(error = true)
         }
-        edited.value = emptyPost
+    }
+
+    fun refreshPosts() = viewModelScope.launch { //подключили карутину
+        try {
+            //записываем лоудинг
+            _state.value = FeedModelState(refreshing = true)
+            //отправка запроса
+            repository.getAll()
+            _state.value = FeedModelState()
+        } catch (e:Exception) {
+            _state.value = FeedModelState(error = true)
+        }
+    }
+
+    fun likeById(id: Long) = viewModelScope.launch {
+
+        val post = data.value?.posts?.find { it.id == id } ?: emptyPost
+        try {
+            _state.value = FeedModelState(loading = true)
+            repository.likeById(post)
+            _state.value = FeedModelState()
+        } catch (e: Exception) {
+            _state.value = FeedModelState(error = true)
+        }
+    }
+
+    fun shareById(post: Post) = viewModelScope.launch {
+        try {
+            _state.value = FeedModelState(loading = true)
+            repository.shareById(post)
+            _state.value = FeedModelState()
+        } catch (e: Exception) {
+            _state.value = FeedModelState(error = true)
+        }
+    }
+
+    fun viewById(post: Post) = viewModelScope.launch {
+        try {
+            _state.value = FeedModelState(loading = true)
+            repository.viewById(post)
+            _state.value = FeedModelState()
+        } catch (e: Exception) {
+            _state.value = FeedModelState(error = true)
+        }
+    }
+
+    fun removeById(id: Long) = viewModelScope.launch {
+        try {
+            _state.value = FeedModelState(loading = true)
+            repository.removeById(id)
+            _state.value = FeedModelState()
+        } catch (e: Exception) {
+            _state.value = FeedModelState(error = true)
+        }
+    }
+
+    fun save() {
+        edited.value?.let {editedPost ->
+            val newState = data.value?.posts.orEmpty()
+                .map { if (it.id == editedPost.id) editedPost else it}
+            _postCreated.value = Unit
+            viewModelScope.launch {
+                try {
+                    _state.value = FeedModelState(loading = true)
+                    repository.save(editedPost)
+                    _state.value = FeedModelState()
+                } catch (e: Exception) {
+                    _state.value = FeedModelState(error = true)
+                }
+            }
+        }
     }
 
     fun edit(post: Post) {
@@ -127,10 +129,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun changeContent(content: String) {
         val text = content.trim()
-        if (edited.value?.content == text) {
-            return
-        }
+        if (edited.value?.content == text) return
         edited.value = edited.value?.copy(content = text)
     }
-
 }

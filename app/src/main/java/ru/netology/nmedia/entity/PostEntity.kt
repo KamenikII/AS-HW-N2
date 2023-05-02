@@ -24,7 +24,7 @@ data class PostEntity(
     @Embedded
     val attachment: AttachmentEmbeddable?,
 ) {
-    fun toPost() = Post(
+    fun toDto() = Post(
         id, author, authorImage, content, published, urlOfVideo, attachment?.toDto(), likedByMe, likeCount,
         shareByMe, share, viewItByMe, viewIt
     )
@@ -37,3 +37,7 @@ data class PostEntity(
             )
     }
 }
+
+
+fun List<PostEntity>.toDto(): List<Post> = map(PostEntity::toDto)
+fun List<Post>.toEntity(): List<PostEntity> = map(PostEntity::fromDto)
