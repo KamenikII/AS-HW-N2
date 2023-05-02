@@ -31,6 +31,8 @@ class FeedFragment : Fragment() {
         //рисуем фрагмент fragment_feed
         val binding = FragmentFeedBinding.inflate(layoutInflater)
 
+        var newPostCount = 0
+
         //viewmodel
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
 
@@ -110,6 +112,15 @@ class FeedFragment : Fragment() {
                     .setAction(R.string.retry_loading){viewModel.loadPosts()}
                     .show()
             }
+        }
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            println("----------Новый пост: " + state)
+            if (state != 0) {
+                newPostCount += 1
+                binding.newPostButton.isVisible = true
+                binding.newPostButton.text = "$newPostCount" + getString(R.string.new_post)
+            }
+
         }
 
         binding.swipe.setOnRefreshListener { viewModel.refreshPosts()}

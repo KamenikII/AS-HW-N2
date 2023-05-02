@@ -38,4 +38,6 @@
     <string name="on_failure">Error!</string>
 
     <string name="play_video">Play Video</string>
+
+    <string name="new_post">Show new posts</string>
 </resources>

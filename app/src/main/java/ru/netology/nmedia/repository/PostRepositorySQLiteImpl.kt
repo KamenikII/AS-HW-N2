@@ -1,14 +1,14 @@
 package ru.netology.nmedia.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import okhttp3.*
 import ru.netology.nmedia.dataClasses.Post
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nmedia.api.PostsApi
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.entity.PostEntity
@@ -33,7 +33,10 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
         private val jsonType = "application/json".toMediaType()
     }
 
-    override fun data() = postDao.getAll().map {it.map(PostEntity::toDto)}
+    //override fun data() = postDao.getAll().map {it.map(PostEntity::toDto)}
+    override fun data() = postDao
+        .getAllVisible().map{it.map(PostEntity::toDto)}
+        .flowOn(Dispatchers.Default)
 
     override suspend fun getAll() {
         try {
@@ -94,7 +97,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
     override suspend fun shareById(post: Post) {
         postDao.shareById(post.id)
-/*        try {
+//        try {
 //            //запрашиваем с сервера
 //            val response = PostsApi.retrofitService.shareById(post.id)
 //
@@ -110,7 +113,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 //        } catch (e: IOException) { //ловим ошибки
 //            throw NetworkError
 //        }
-*/    }
+    }
 
     override suspend fun viewById(post: Post) {
         postDao.viewItById(post.id)
@@ -151,6 +154,24 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             postDao.insert(PostEntity.fromDto(body))
         } catch (e: IOException) { //ловим ошибки
+            throw NetworkError
+        }
+    }
+
+    override fun getNewerCount(id: Long): Flow<Int> = flow {
+        try {
+            delay(10_000L)
+            val response = PostsApi.retrofitService.getNewer(id)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            emit(body.size)
+//            postDao.insert(body.toEntity().map {
+//                it.copy(hidden = true)
+//            })
+        } catch (e: IOException) {
             throw NetworkError
         }
     }
