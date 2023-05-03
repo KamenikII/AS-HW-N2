@@ -97,7 +97,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
     override suspend fun shareById(post: Post) {
         postDao.shareById(post.id)
-//        try {
+//TODO        try {
 //            //запрашиваем с сервера
 //            val response = PostsApi.retrofitService.shareById(post.id)
 //
@@ -117,7 +117,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
     override suspend fun viewById(post: Post) {
         postDao.viewItById(post.id)
-/*        try {
+/*TODO        try {
             //запрашиваем с сервера
             val response = PostsApi.retrofitService.viewItById(post.id)
 
