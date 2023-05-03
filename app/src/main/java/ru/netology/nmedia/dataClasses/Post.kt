@@ -25,7 +25,8 @@ data class Post(
     val shareByMe: Boolean = false, //делился ли пользователь постом
     val share: Int = 0,// Share = Share(), //кол-во репостов
     val viewItByMe: Boolean = false, //просмотрел ли пользователь пост
-    val viewIt: Int = 0, //View = View(), //кол-во просмотров
+    val viewIt: Int = 0,
+    val hidden: Boolean, //View = View(), //кол-во просмотров
 )
 
 //files

@@ -21,19 +21,20 @@ data class PostEntity(
     val viewItByMe: Boolean = false,
     val viewIt: Int = 0,
     val urlOfVideo: String? = null,
+    val hidden: Boolean = false,
     @Embedded
     val attachment: AttachmentEmbeddable?,
 ) {
     fun toDto() = Post(
         id, author, authorImage, content, published, urlOfVideo, attachment?.toDto(), likedByMe, likeCount,
-        shareByMe, share, viewItByMe, viewIt
+        shareByMe, share, viewItByMe, viewIt, hidden
     )
 
     companion object {
         fun fromDto(dto: Post) =
             PostEntity(
                 dto.id, dto.author, dto.authorImage, dto.content, dto.published, dto.likeByMe, dto.likes,
-                dto.shareByMe, dto.share, dto.viewItByMe, dto.viewIt, dto.urlOfVideo, AttachmentEmbeddable.fromDto(dto.attachment)
+                dto.shareByMe, dto.share, dto.viewItByMe, dto.viewIt, dto.urlOfVideo, dto.hidden, AttachmentEmbeddable.fromDto(dto.attachment)
             )
     }
 }
