@@ -168,9 +168,9 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
             emit(body.size)
-//            postDao.insert(body.toEntity().map {
-//                it.copy(hidden = true)
-//            })
+            postDao.insert(body.toEntity().map {
+                it.copy(hidden = true)
+            })
         } catch (e: IOException) {
             throw NetworkError
         }
