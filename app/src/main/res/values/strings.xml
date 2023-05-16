@@ -40,4 +40,11 @@
     <string name="play_video">Play Video</string>
 
     <string name="new_post">Show new posts</string>
+
+    <string name="remove">DELETE</string>
+
+    <string name="menu_save">Save</string>
+    <string name="description_take_photo">Take photo</string>
+    <string name="description_photo">Photo</string>
+    <string name="description_select_photo">Select photo</string>
 </resources>
