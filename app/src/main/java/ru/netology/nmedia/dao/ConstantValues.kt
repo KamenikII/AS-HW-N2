@@ -9,11 +9,12 @@ object ConstantValues {
     /* пример поста */
     val emptyPost = Post(
         id = 0,
-        content = "",
         author = "Нетология",
+        published = "now",
+        content = "",
         likes = 0,
         share = 0,
         viewIt = 0,
-        published = "now"
+        hidden = false
     )
 }
