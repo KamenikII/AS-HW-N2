@@ -95,6 +95,7 @@ class FeedFragment : Fragment() {
                     viewModel.viewById(post)
                 }
 
+                //обновление
                 override fun onReload() {
                     viewModel.loadPosts()
                 }
