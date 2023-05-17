@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
 import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.dataClasses.Post
@@ -94,10 +95,16 @@ class FeedFragment : Fragment() {
                     viewModel.viewById(post)
                 }
 
+                //обновление
                 override fun onReload() {
                     viewModel.loadPosts()
                 }
 
+                //нажали на картинку
+                override fun onPicture(url: String) {
+                    findNavController().navigate(R.id.action_feedFragment_to_pictureViewFragment,
+                        Bundle().apply { urlArg = url })
+                }
 
             }
         )

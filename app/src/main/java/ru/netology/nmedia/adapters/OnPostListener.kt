@@ -14,4 +14,5 @@ interface OnPostListener {
     fun onPreviewPost(post: Post) {}
     fun onPost(id: Long) {}
     fun onReload() {}
+    fun onPicture(url: String) {}
 }

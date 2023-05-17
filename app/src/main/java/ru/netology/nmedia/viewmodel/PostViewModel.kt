@@ -1,6 +1,7 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -11,9 +12,11 @@ import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
+import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 import ru.netology.nmedia.util.SingleLiveEvent
+import java.io.File
 
 /** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
 
@@ -38,6 +41,12 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             .catch {e -> e.printStackTrace()}
             .asLiveData(Dispatchers.Default)
     }
+
+    //photo
+    private val noPhoto = PhotoModel()
+    private val _photo = MutableLiveData(noPhoto)
+    val photo: LiveData<PhotoModel>
+        get() = _photo
 
     init {
         loadPosts()
@@ -139,5 +148,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         val text = content.trim()
         if (edited.value?.content == text) return
         edited.value = edited.value?.copy(content = text)
+    }
+
+    //делаем фото
+    fun changePhoto(uri: Uri?, file: File?) {
+        _photo.value = PhotoModel(uri, file)
     }
 }
