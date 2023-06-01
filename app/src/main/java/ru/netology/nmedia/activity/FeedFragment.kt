@@ -84,6 +84,7 @@ class FeedFragment : Fragment() {
                     }
                 }
 
+                //превью поста
                 override fun onPreviewPost(post: Post) {
                     findNavController().navigate(
                         R.id.action_feedFragment_to_postFragment,

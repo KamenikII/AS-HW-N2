@@ -85,9 +85,3 @@ interface PostsApiService {
         @Part media: MultipartBody.Part,
     ): Response<Token>
 }
-
-object PostsApi {
-    val retrofitService: PostsApiService by lazy {
-        retrofit.create(PostsApiService::class.java)
-    }
-}

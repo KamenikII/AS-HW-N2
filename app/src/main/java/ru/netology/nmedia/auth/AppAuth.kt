@@ -3,6 +3,8 @@ package ru.netology.nmedia.auth
 import android.content.Context
 import kotlinx.coroutines.flow.*
 
+/**КЛАСС ОТВЕЧАЮЩИЙ ЗА АВТОРИЗАЦИЮ*/
+
 class AppAuth private constructor(context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val idKey = "id"
@@ -63,5 +65,3 @@ class AppAuth private constructor(context: Context) {
         private fun buildAuth(context: Context): AppAuth = AppAuth(context)
     }
 }
-
-data class AuthState(val id: Long = 0, val token: String? = null)

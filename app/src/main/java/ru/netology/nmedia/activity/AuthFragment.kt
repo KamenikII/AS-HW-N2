@@ -23,6 +23,8 @@ import ru.netology.nmedia.dataClasses.MediaUpload
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import kotlin.coroutines.EmptyCoroutineContext
 
+/** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ОКНО РЕГИСТРАЦИИ, А ТАК ЖЕ НАВИГАЦИЮ */
+
 class AuthFragment : Fragment() {
     private val binding by lazy { FragmentAuthBinding.inflate(layoutInflater) }
     private val viewModel: AuthViewModel by viewModels()

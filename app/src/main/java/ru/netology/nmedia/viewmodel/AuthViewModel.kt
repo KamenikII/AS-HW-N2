@@ -18,6 +18,8 @@ import ru.netology.nmedia.model.PhotoModel
 import java.io.File
 import java.io.IOException
 
+/**КЛАСС, ОТВЕЧАЮЩИЙ ЗА ДЕЙСТВИЯ ПРИ АВТОРИЗАЦИИ*/
+
 class AuthViewModel (
     private val appAuth: AppAuth,
     private val apiService: PostsApiService,

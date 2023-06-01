@@ -30,16 +30,3 @@ data class Post(
     val viewIt: Int = 0,
     val hidden: Boolean, //View = View(), //кол-во просмотров
 )
-
-//files
-data class Attachment(
-    val url: String, //URL приложения
-    val description: String? = "", //описание
-    val type: AttachmentType, //тип
-)
-
-//type of files
-enum class AttachmentType {
-    IMAGE, //картинка
-    VIDEO //видео
-}
