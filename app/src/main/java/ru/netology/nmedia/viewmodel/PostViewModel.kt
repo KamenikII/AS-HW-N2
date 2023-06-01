@@ -1,19 +1,26 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+import android.net.Uri
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.ConstantValues.emptyPost
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
+import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.repository.PostRepositorySQLiteImpl
 import ru.netology.nmedia.util.SingleLiveEvent
+import java.io.File
 
 /** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
 
@@ -25,13 +32,29 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val state: LiveData<FeedModelState>
         get() = _state
 
-    val data: LiveData<FeedModel> = repository.data().map(::FeedModel)
-        .asLiveData(Dispatchers.Default) //{ FeedModel(it, it.isEmpty())}
+    val data: LiveData<FeedModel> = AppAuth.getInstance().authStateFlow.flatMapLatest { (myId, _) ->
+        repository.data()
+            .map { posts ->
+                FeedModel(
+                    posts.map { post ->
+                        post.copy(ownedByMe = post.authorId == myId) },
+                    posts.isEmpty())
+            }
+    }.asLiveData(Dispatchers.Default) //{ FeedModel(it, it.isEmpty())}
 
     private val edited = MutableLiveData(emptyPost)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
+
+    private val _photo = MutableLiveData(
+        PhotoModel(
+            edited.value?.attachment?.url?.toUri(),
+            edited.value?.attachment?.url?.toUri()?.toFile()
+        )
+    )
+    val photo: LiveData<PhotoModel>
+        get() = _photo
 
     val newerCount: LiveData<Int> = data.switchMap {
         repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
@@ -138,5 +161,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         val text = content.trim()
         if (edited.value?.content == text) return
         edited.value = edited.value?.copy(content = text)
+    }
+
+    //work with photo
+    fun changePhoto(uri: Uri?, file: File?) {
+        _photo.value = PhotoModel(uri, file)
     }
 }

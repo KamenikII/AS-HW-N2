@@ -10,6 +10,8 @@ data class Post(
     val author: String = "Адмен XD", //Имя автора
     val authorImage: String? = null, //Аватарка автора
     val published: String, //Дата публикации
+    val authorId: Long, // ID автора
+    val ownedByMe: Boolean = false, //Мой ли это пост
 
     //content
     val content: String, //Текст поста

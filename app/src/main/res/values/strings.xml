@@ -40,4 +40,25 @@
     <string name="play_video">Play Video</string>
 
     <string name="new_post">Show new posts</string>
+
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="hint_author_name">Login</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_password_confirm">Repeat password</string>
+    <string name="upload_avatar">Upload Avatar</string>
+    <string name="error_password_not_ident">Password not ident</string>
+    <string name="are_you_suare">Are you sure?</string>
+    <string name="yes">Yup!</string>
+    <string name="no">Nope!</string>
+    <string name="eror_code">Error code</string>
+    <string name="not_pass_enter">Неверный логин или пароль</string>
+    <string name="action_not_allowed">Action not allowed for anonym</string>
+    <string name="back">Back</string>
+    <string name="hint_enter_name">Name</string>
+    <string name="ad_description">Ad description</string>
+    <string name="for_a_long_time_separator">For a long time</string>
+    <string name="description_photo">description photo</string>
+    <string name="remove">Remove</string>
 </resources>

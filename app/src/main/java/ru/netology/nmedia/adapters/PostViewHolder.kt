@@ -69,6 +69,7 @@ class PostViewHolder(
             onPostListener.view(post)
 
             //menu listener
+            moreActions.isVisible = post.ownedByMe
             moreActions.setOnClickListener {
                 PopupMenu(it.context, it).apply {
                     inflate(R.menu.options_post) //при нажатие открывается менюшка res/menu/optional_post.xml

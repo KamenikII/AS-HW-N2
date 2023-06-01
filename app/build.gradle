@@ -124,4 +124,8 @@ dependencies {
     //swipe to refresh
     def swiperefreshlayout_version = "1.1.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout_version"
+
+    //image picker
+    def image_picker_version = "2.1"
+    implementation "com.github.dhaval2404:imagepicker:$image_picker_version"
 }
