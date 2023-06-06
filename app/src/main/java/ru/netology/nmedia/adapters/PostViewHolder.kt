@@ -21,7 +21,7 @@ class PostViewHolder(
     fun renderingPostStructure(post: Post) {
         with(binding) {
             author.text = post.author //Автор поста
-            published.text = post.published //Дата публикации
+            published.text = post.published.toString() //Дата публикации
             content.text = post.content //текст поста
             like.text = post.likes.toString() //кол-во лайков
             like.isChecked = post.likeByMe //понравилось ли пользователю
@@ -64,9 +64,9 @@ class PostViewHolder(
             shareIt.isChecked = post.shareByMe
             shareIt.text = post.share.toString()
 
-            //view listener
-            view.text = post.viewIt.toString()
-            onPostListener.view(post)
+            //TODO view listener
+//            view.text = post.viewIt.toString()
+//            onPostListener.view(post)
 
             //menu listener
             moreActions.isVisible = post.ownedByMe

@@ -11,7 +11,7 @@ object ConstantValues {
     val emptyPost = Post(
         id = 0,
         author = "Нетология",
-        published = "now",
+        published = 0,
         content = "",
         likes = 0,
         share = 0,

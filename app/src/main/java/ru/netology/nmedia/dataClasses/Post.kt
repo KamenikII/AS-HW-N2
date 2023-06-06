@@ -9,7 +9,7 @@ data class Post(
     val id: Long, //Уникальный индификатор поста
     val author: String = "Адмен XD", //Имя автора
     val authorImage: String? = null, //Аватарка автора
-    val published: String, //Дата публикации
+    val published: Long, //Дата публикации
     val authorId: Long, // ID автора
     val ownedByMe: Boolean = false, //Мой ли это пост
 

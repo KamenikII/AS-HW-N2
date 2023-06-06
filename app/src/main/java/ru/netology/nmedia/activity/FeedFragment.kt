@@ -189,7 +189,7 @@ class FeedFragment : Fragment() {
                         else -> false
                     }
                 }
-            }.apply { menuProvider = this })
+            }.apply { menuProvider = this }, viewLifecycleOwner)
         }
 
         return binding.root

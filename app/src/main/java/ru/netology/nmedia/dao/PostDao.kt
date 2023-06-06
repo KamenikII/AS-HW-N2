@@ -48,11 +48,11 @@ interface PostDao {
             """)
     suspend fun shareById(id: Long)
 
-    @Query("""
-                UPDATE PostEntity SET
-                    viewIt = viewIt + CASE WHEN viewItByMe THEN -1 ELSE 1 END,
-                    viewItByMe = CASE WHEN viewItByMe THEN 0 ELSE 1 END
-                WHERE id= :id
-            """)
-    suspend fun viewItById(id: Long)
+//    TODO @Query("""
+//                UPDATE PostEntity SET
+//                    viewIt = viewIt + CASE WHEN viewItByMe THEN -1 ELSE 1 END,
+//                    viewItByMe = CASE WHEN viewItByMe THEN 0 ELSE 1 END
+//                WHERE id= :id
+//            """)
+//    suspend fun viewItById(id: Long)
 }

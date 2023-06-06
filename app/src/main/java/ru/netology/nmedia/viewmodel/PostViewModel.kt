@@ -117,13 +117,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun viewById(post: Post) = viewModelScope.launch {
-        try {
-            _state.value = FeedModelState(loading = true)
-            repository.viewById(post)
-            _state.value = FeedModelState()
-        } catch (e: Exception) {
-            _state.value = FeedModelState(error = true)
-        }
+//        TODO try {
+//            _state.value = FeedModelState(loading = true)
+//            repository.viewById(post)
+//            _state.value = FeedModelState()
+//        } catch (e: Exception) {
+//            _state.value = FeedModelState(error = true)
+//        }
     }
 
     fun removeById(id: Long) = viewModelScope.launch {

@@ -13,7 +13,7 @@ data class PostEntity(
     val author: String,
     val authorImage: String? = null,
     val content: String,
-    val published: String,
+    val published: Long,
     val likedByMe: Boolean= false,
     val likeCount: Int = 0,
     val authorId: Long,

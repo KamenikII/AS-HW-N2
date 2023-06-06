@@ -116,7 +116,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     }
 
     override suspend fun viewById(post: Post) {
-        postDao.viewItById(post.id)
+        //postDao.viewItById(post.id)
 /*TODO        try {
             //запрашиваем с сервера
             val response = PostsApi.retrofitService.viewItById(post.id)
