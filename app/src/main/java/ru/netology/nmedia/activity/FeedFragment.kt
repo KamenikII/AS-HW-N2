@@ -98,6 +98,7 @@ class FeedFragment : Fragment() {
                     viewModel.viewById(post)
                 }
 
+                //обновление
                 override fun onReload() {
                     viewModel.loadPosts()
                 }
@@ -107,6 +108,7 @@ class FeedFragment : Fragment() {
                     findNavController().navigate(R.id.action_feedFragment_to_pictureViewFragment,
                         Bundle().apply { urlArg = url })
                 }
+
             }
         )
 
