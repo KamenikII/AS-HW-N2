@@ -2,11 +2,15 @@ package ru.netology.nmedia.viewmodel
 
 import android.app.Application
 import android.net.Uri
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.map
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dao.ConstantValues.emptyPost
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.db.AppDb
@@ -28,13 +32,29 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val state: LiveData<FeedModelState>
         get() = _state
 
-    val data: LiveData<FeedModel> = repository.data().map(::FeedModel)
-        .asLiveData(Dispatchers.Default) //{ FeedModel(it, it.isEmpty())}
+    val data: LiveData<FeedModel> = AppAuth.getInstance().authStateFlow.flatMapLatest { (myId, _) ->
+        repository.data()
+            .map { posts ->
+                FeedModel(
+                    posts.map { post ->
+                        post.copy(ownedByMe = post.authorId == myId) },
+                    posts.isEmpty())
+            }
+    }.asLiveData(Dispatchers.Default) //{ FeedModel(it, it.isEmpty())}
 
     private val edited = MutableLiveData(emptyPost)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
+
+    private val _photo = MutableLiveData(
+        PhotoModel(
+            edited.value?.attachment?.url?.toUri(),
+            edited.value?.attachment?.url?.toUri()?.toFile()
+        )
+    )
+    val photo: LiveData<PhotoModel>
+        get() = _photo
 
     val newerCount: LiveData<Int> = data.switchMap {
         repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
@@ -104,13 +124,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun viewById(post: Post) = viewModelScope.launch {
-        try {
-            _state.value = FeedModelState(loading = true)
-            repository.viewById(post)
-            _state.value = FeedModelState()
-        } catch (e: Exception) {
-            _state.value = FeedModelState(error = true)
-        }
+//        TODO try {
+//            _state.value = FeedModelState(loading = true)
+//            repository.viewById(post)
+//            _state.value = FeedModelState()
+//        } catch (e: Exception) {
+//            _state.value = FeedModelState(error = true)
+//        }
     }
 
     fun removeById(id: Long) = viewModelScope.launch {
@@ -150,7 +170,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = text)
     }
 
-    //делаем фото
+    //work with photo
     fun changePhoto(uri: Uri?, file: File?) {
         _photo.value = PhotoModel(uri, file)
     }

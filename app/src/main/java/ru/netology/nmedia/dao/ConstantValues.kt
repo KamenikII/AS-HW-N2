@@ -1,6 +1,7 @@
 package ru.netology.nmedia.dao
 
 import ru.netology.nmedia.dataClasses.Post
+import ru.netology.nmedia.model.PhotoModel
 
 /** ОБЪЕКТ, ОТВЕЧАЮЩИЙ ЗА КОНСТАНТЫ */
 
@@ -10,11 +11,13 @@ object ConstantValues {
     val emptyPost = Post(
         id = 0,
         author = "Нетология",
-        published = "now",
+        published = 0,
         content = "",
         likes = 0,
         share = 0,
         viewIt = 0,
-        hidden = false
+        hidden = false,
+        authorId = 0L,
     )
+    val noPhoto = PhotoModel()
 }

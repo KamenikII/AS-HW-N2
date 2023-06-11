@@ -3,9 +3,8 @@ package ru.netology.nmedia.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,10 +14,12 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
 import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
+import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЛЕНТУ НОВОСТЕЙ, РАБОТУ С ПОСТАМИ И ОТРИСОВКУ, А ТАК ЖЕ НАВИГАЦИЮ */
@@ -36,6 +37,7 @@ class FeedFragment : Fragment() {
 
         //viewmodel
         val viewModel: PostViewModel by viewModels(::requireParentFragment)
+        val authViewModel: AuthViewModel by viewModels()
 
         val adapter = PostsAdapter(
             object : OnPostListener {
@@ -82,6 +84,7 @@ class FeedFragment : Fragment() {
                     }
                 }
 
+                //превью поста
                 override fun onPreviewPost(post: Post) {
                     findNavController().navigate(
                         R.id.action_feedFragment_to_postFragment,
@@ -144,6 +147,51 @@ class FeedFragment : Fragment() {
         //нажали кнопку создания нового поста
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
+        }
+
+
+        //login | logout
+        var menuProvider: MenuProvider? = null
+        authViewModel.data.observe(viewLifecycleOwner) { authState ->
+            menuProvider?.let { requireActivity().removeMenuProvider(it)}
+            requireActivity().addMenuProvider(object : MenuProvider {
+                //раздуваем менюшку
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.main_menu, menu)
+
+                    menu.setGroupVisible(R.id.authorized, authViewModel.authenticated)
+                    menu.setGroupVisible(R.id.unauthorized, !authViewModel.authenticated)
+                }
+
+                //реакции на кнопки
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.signout -> {
+                            AppAuth.getInstance().removeAuth()
+                            true
+                        }
+                        R.id.signin -> {
+                            findNavController().navigate(
+                                R.id.action_feedFragment_to_authFragment,
+                                Bundle().apply {
+                                    textArg = getString(R.string.sign_in)
+                                }
+                            )
+                            true
+                        }
+                        R.id.signup -> {
+                            findNavController().navigate(
+                                R.id.action_feedFragment_to_authFragment,
+                                Bundle().apply {
+                                    textArg = getString(R.string.sign_up)
+                                }
+                            )
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            }.apply { menuProvider = this }, viewLifecycleOwner)
         }
 
         return binding.root

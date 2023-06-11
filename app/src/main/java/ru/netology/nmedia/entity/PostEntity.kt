@@ -13,9 +13,10 @@ data class PostEntity(
     val author: String,
     val authorImage: String? = null,
     val content: String,
-    val published: String,
+    val published: Long,
     val likedByMe: Boolean= false,
     val likeCount: Int = 0,
+    val authorId: Long,
     val shareByMe: Boolean = false,
     val share: Int = 0,
     val viewItByMe: Boolean = false,
@@ -26,15 +27,41 @@ data class PostEntity(
     val attachment: AttachmentEmbeddable?,
 ) {
     fun toDto() = Post(
-        id, author, authorImage, content, published, urlOfVideo, attachment?.toDto(), likedByMe, likeCount,
-        shareByMe, share, viewItByMe, viewIt, hidden
+        id = id,
+        author = author,
+        authorImage= authorImage,
+        content = content,
+        authorId = authorId,
+        published = published,
+        urlOfVideo = urlOfVideo,
+        attachment = attachment?.toDto(),
+        likeByMe = likedByMe,
+        likes = likeCount,
+        shareByMe = shareByMe,
+        share = share,
+        viewItByMe = viewItByMe,
+        viewIt = viewIt,
+        hidden = hidden
     )
 
     companion object {
         fun fromDto(dto: Post) =
             PostEntity(
-                dto.id, dto.author, dto.authorImage, dto.content, dto.published, dto.likeByMe, dto.likes,
-                dto.shareByMe, dto.share, dto.viewItByMe, dto.viewIt, dto.urlOfVideo, dto.hidden, AttachmentEmbeddable.fromDto(dto.attachment)
+                id = dto.id,
+                author = dto.author,
+                authorImage= dto.authorImage,
+                content = dto.content,
+                authorId = dto.authorId,
+                published = dto.published,
+                urlOfVideo = dto.urlOfVideo,
+                attachment = AttachmentEmbeddable.fromDto(dto.attachment),
+                likedByMe = dto.likeByMe,
+                likeCount = dto.likes,
+                shareByMe = dto.shareByMe,
+                share = dto.share,
+                viewItByMe = dto.viewItByMe,
+                viewIt = dto.viewIt,
+                hidden = dto.hidden
             )
     }
 }

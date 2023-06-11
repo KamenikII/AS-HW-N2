@@ -9,7 +9,9 @@ data class Post(
     val id: Long, //Уникальный индификатор поста
     val author: String = "Адмен XD", //Имя автора
     val authorImage: String? = null, //Аватарка автора
-    val published: String, //Дата публикации
+    val published: Long, //Дата публикации
+    val authorId: Long, // ID автора
+    val ownedByMe: Boolean = false, //Мой ли это пост
 
     //content
     val content: String, //Текст поста
@@ -28,16 +30,3 @@ data class Post(
     val viewIt: Int = 0,
     val hidden: Boolean, //View = View(), //кол-во просмотров
 )
-
-//files
-data class Attachment(
-    val url: String, //URL приложения
-    val description: String? = "", //описание
-    val type: AttachmentType, //тип
-)
-
-//type of files
-enum class AttachmentType {
-    IMAGE, //картинка
-    VIDEO //видео
-}
