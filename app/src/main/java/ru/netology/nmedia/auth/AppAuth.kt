@@ -1,7 +1,16 @@
 package ru.netology.nmedia.auth
 
 import android.content.Context
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.api.ApiService
+import ru.netology.nmedia.dataClasses.PushToken
 
 /**КЛАСС ОТВЕЧАЮЩИЙ ЗА АВТОРИЗАЦИЮ*/
 
@@ -25,6 +34,8 @@ class AppAuth private constructor(context: Context) {
         } else {
             _authStateFlow = MutableStateFlow(AuthState(id, token))
         }
+
+        sendPushToken()
     }
 
     val authStateFlow: StateFlow<AuthState> = _authStateFlow.asStateFlow()
@@ -37,6 +48,8 @@ class AppAuth private constructor(context: Context) {
             putString(tokenKey, token)
             apply()
         }
+
+        sendPushToken()
     }
 
     @Synchronized
@@ -46,6 +59,8 @@ class AppAuth private constructor(context: Context) {
             clear()
             commit()
         }
+
+        sendPushToken()
     }
 
     companion object {
@@ -63,5 +78,16 @@ class AppAuth private constructor(context: Context) {
         }
 
         private fun buildAuth(context: Context): AppAuth = AppAuth(context)
+    }
+
+    fun sendPushToken(token: String? = null) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val pushToken = PushToken(token ?: Firebase.messaging.token.await())
+                ApiService.saveToken(pushToken)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }

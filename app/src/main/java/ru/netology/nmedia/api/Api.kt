@@ -37,8 +37,8 @@ private val retrofit = Retrofit.Builder()
     .client(okhttp)
     .build()
 
-object PostsApi {
-    val retrofitService: PostsApiService by lazy {
-        retrofit.create(PostsApiService::class.java)
+object Api {
+    val retrofitService: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
     }
 }
