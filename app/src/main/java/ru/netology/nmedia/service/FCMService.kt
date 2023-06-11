@@ -57,19 +57,19 @@ class FCMService : FirebaseMessagingService() {
         }
 
         val myId = appAuth.authStateFlow.value.id
-        val recipientId = message.data.values.map {
+        val inputNoty = message.data.values.map {
             gson.fromJson(it, Noty::class.java)
         }[0]
 
-        when (recipientId) {
+        when (inputNoty.recipientId) {
             myId -> {
-                handleNotyAction(recipientId, "Personal mail")
+                handleNotyAction(inputNoty, "Personal mail")
             }
             null -> {
-                handleNotyAction(recipientId, "Mass mailing")
+                handleNotyAction(inputNoty, "Mass mailing")
             }
             else -> {
-                handleNotyAction(recipientId, "Invalid authentication, re-send token")
+                handleNotyAction(inputNoty, "Invalid authentication, re-send token")
                 appAuth.sendPushToken()
             }
         }
