@@ -9,7 +9,7 @@ import okhttp3.*
 import ru.netology.nmedia.dataClasses.Post
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
-import ru.netology.nmedia.api.PostsApi
+import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toEntity
@@ -41,7 +41,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun getAll() {
         try {
             //запрашиваем с сервера
-            val response = PostsApi.retrofitService.getAll()
+            val response = Api.retrofitService.getAll()
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -60,7 +60,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun save(post: Post) {
         try {
             //запрашиваем с сервера
-            val response = PostsApi.retrofitService.save(post)
+            val response = Api.retrofitService.save(post)
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -82,7 +82,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun removeById(id: Long) {
         try {
             //запрашиваем с сервера
-            val response = PostsApi.retrofitService.removeById(id)
+            val response = Api.retrofitService.removeById(id)
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -140,9 +140,9 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
         try {
             //запрашиваем с сервера
             val response = if (post.likeByMe) {
-                PostsApi.retrofitService.dislikeById(post.id)
+                Api.retrofitService.dislikeById(post.id)
             } else {
-                PostsApi.retrofitService.likeById(post.id)
+                Api.retrofitService.likeById(post.id)
 
             }
 
@@ -162,7 +162,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override fun getNewerCount(id: Long): Flow<Int> = flow {
         try {
             delay(10_000L)
-            val response = PostsApi.retrofitService.getNewer(id)
+            val response = Api.retrofitService.getNewer(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
