@@ -8,13 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import ru.netology.nmedia.api.Api
-import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dataClasses.PushToken
+import ru.netology.nmedia.di.DependencyContainer
 
 /**КЛАСС ОТВЕЧАЮЩИЙ ЗА АВТОРИЗАЦИЮ*/
 
-class AppAuth private constructor(context: Context) {
+class AppAuth (context: Context) {
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val idKey = "id"
     private val tokenKey = "token"
@@ -63,28 +62,11 @@ class AppAuth private constructor(context: Context) {
         sendPushToken()
     }
 
-    companion object {
-        @Volatile
-        private var instance: AppAuth? = null
-
-        fun getInstance(): AppAuth = synchronized(this) {
-            instance ?: throw IllegalStateException(
-                "AppAuth is not initialized, you must call AppAuth.initializeApp(Context context) first."
-            )
-        }
-
-        fun initApp(context: Context): AppAuth = instance ?: synchronized(this) {
-            instance ?: buildAuth(context).also { instance = it }
-        }
-
-        private fun buildAuth(context: Context): AppAuth = AppAuth(context)
-    }
-
     fun sendPushToken(token: String? = null) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val pushToken = PushToken(token ?: Firebase.messaging.token.await())
-                Api.retrofitService.saveToken(pushToken)
+                DependencyContainer.getInstance().apiService.saveToken(pushToken)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

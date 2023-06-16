@@ -8,19 +8,21 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
 import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
-import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentFeedBinding
+import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
+import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЛЕНТУ НОВОСТЕЙ, РАБОТУ С ПОСТАМИ И ОТРИСОВКУ, А ТАК ЖЕ НАВИГАЦИЮ */
 
@@ -30,13 +32,24 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        //зависимости
+        val dependencyContainer = DependencyContainer.getInstance()
+
         //рисуем фрагмент fragment_feed
         val binding = FragmentFeedBinding.inflate(layoutInflater)
 
         var newPostCount = 0
 
         //viewmodel
-        val viewModel: PostViewModel by viewModels(::requireParentFragment)
+        val viewModel: PostViewModel by viewModels(
+            ownerProducer = ::requireParentFragment,
+            factoryProducer = {
+                ViewModelFactory(dependencyContainer.repository,
+                dependencyContainer.appAuth,
+                dependencyContainer.apiService,
+                )
+            }
+        )
         val authViewModel: AuthViewModel by viewModels()
 
         val adapter = PostsAdapter(
@@ -164,10 +177,6 @@ class FeedFragment : Fragment() {
                 //реакции на кнопки
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
-                        R.id.signout -> {
-                            AppAuth.getInstance().removeAuth()
-                            true
-                        }
                         R.id.signin -> {
                             findNavController().navigate(
                                 R.id.action_feedFragment_to_authFragment,
@@ -175,6 +184,7 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_in)
                                 }
                             )
+                            dependencyContainer.appAuth.setAuth(5, "x-token")
                             true
                         }
                         R.id.signup -> {
@@ -184,6 +194,11 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_up)
                                 }
                             )
+                            dependencyContainer.appAuth.setAuth(5, "x-token")
+                            true
+                        }
+                        R.id.signout -> {
+                            dependencyContainer.appAuth.removeAuth()
                             true
                         }
                         else -> false

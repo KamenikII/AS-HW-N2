@@ -8,7 +8,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import ru.netology.nmedia.api.Api
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.auth.AuthState
@@ -21,12 +20,15 @@ import java.io.IOException
 
 /**КЛАСС, ОТВЕЧАЮЩИЙ ЗА ДЕЙСТВИЯ ПРИ АВТОРИЗАЦИИ*/
 
-class AuthViewModel: ViewModel() {
-    val data: LiveData<AuthState> = AppAuth.getInstance()
+class AuthViewModel(
+    private val appAuth : AppAuth,
+    private val apiService: ApiService,
+) : ViewModel() {
+    val data: LiveData<AuthState> = appAuth
         .authStateFlow
         .asLiveData(Dispatchers.Default)
     val authenticated: Boolean
-        get() = AppAuth.getInstance().authStateFlow.value.id != 0L
+        get() = appAuth.authStateFlow.value.id != 0L
 
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel>
@@ -47,7 +49,7 @@ class AuthViewModel: ViewModel() {
         viewModelScope.launch {
             val token: Token
             try {
-                val response = Api.retrofitService.login(login, pass)
+                val response = apiService.login(login, pass)
 
                 if (!response.isSuccessful) {
                     _dataState.value = 1
@@ -55,7 +57,7 @@ class AuthViewModel: ViewModel() {
                     //throw ApiError(response.code(), response.message())
                 } else {
                     token = response.body() ?: Token(id = 0, token = "")
-                    AppAuth.getInstance().setAuth(token.id, token.token)
+                    appAuth.setAuth(token.id, token.token)
                     _dataState.value = 0
                 }
             } catch (e: IOException) {
@@ -73,7 +75,7 @@ class AuthViewModel: ViewModel() {
             val token: Token
             try {
                 val response = if (upload != null) {
-                    Api.retrofitService.registerWithPhoto(
+                    apiService.registerWithPhoto(
                         login.toRequestBody("text/plain".toMediaType()),
                         pass.toRequestBody("text/plain".toMediaType()),
                         name.toRequestBody("text/plain".toMediaType()),
@@ -82,7 +84,7 @@ class AuthViewModel: ViewModel() {
                         )
                     )
                 } else {
-                    Api.retrofitService.register(login,pass,name)
+                    apiService.register(login,pass,name)
                 }
 
                 if (!response.isSuccessful) {
@@ -91,7 +93,7 @@ class AuthViewModel: ViewModel() {
                     //throw ApiError(response.code(), response.message())
                 } else {
                     token = response.body() ?: Token(id = 0, token = "")
-                    AppAuth.getInstance().setAuth(token.id, token.token)
+                    appAuth.setAuth(token.id, token.token)
                     _dataState.value = 0
                 }
             } catch (e: IOException) {

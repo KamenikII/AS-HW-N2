@@ -11,6 +11,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.di.DependencyContainer
 import kotlin.random.Random
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА СЕРВЕР И УВЕДОМЛЕНИЯ */
@@ -20,6 +21,7 @@ class FCMService : FirebaseMessagingService() {
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
+    private val dependencyContainer = DependencyContainer.getInstance()
 
     lateinit var appAuth:AppAuth
 
@@ -76,7 +78,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        AppAuth.getInstance().sendPushToken(token)
+        dependencyContainer.appAuth.sendPushToken(token)
     }
 
     private fun handleLike(content: LikeFCM) {

@@ -19,7 +19,8 @@ import ru.netology.nmedia.util.Companion.Companion.textArg
 class NewPostFragment : Fragment() {
     private val binding by lazy { FragmentNewPostBinding.inflate(layoutInflater) }
     private val viewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment
+        ownerProducer = ::requireParentFragment,
+
     )
 
     //редачим / создаём пост

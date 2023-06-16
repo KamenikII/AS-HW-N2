@@ -1,20 +1,30 @@
 package ru.netology.nmedia.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.messaging.FirebaseMessaging
 import ru.netology.nmedia.R
-import ru.netology.nmedia.util.Companion.Companion.textArg
+import ru.netology.nmedia.di.DependencyContainer
+import ru.netology.nmedia.viewmodel.AuthViewModel
+import ru.netology.nmedia.viewmodel.ViewModelFactory
+
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЗАПУСК ПРИЛОЖЕНИЯ И РАБОТУ С СЕРВИСАМИ GOOGLE */
 
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
+    private val dependencyContainer = DependencyContainer.getInstance()
+    private val viewModel: AuthViewModel by viewModels(
+        factoryProducer = {
+            ViewModelFactory(dependencyContainer.repository,
+                dependencyContainer.appAuth,
+                dependencyContainer.apiService,
+            )
+        }
+    )
 
     //запуск приложения
     override fun onCreate(savedInstanceState: Bundle?) {

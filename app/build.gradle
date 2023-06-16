@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
     id 'com.google.gms.google-services'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -126,7 +127,11 @@ dependencies {
     def swiperefreshlayout_version = "1.1.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$swiperefreshlayout_version"
 
-    //image picker
-    def image_picker_version = "2.1"
-    implementation "com.github.dhaval2404:imagepicker:$image_picker_version"
+    //photo
+    def imagepicker_version = "2.1"
+    implementation "com.github.dhaval2404:imagepicker:$imagepicker_version"
+
+    //dagger hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 }

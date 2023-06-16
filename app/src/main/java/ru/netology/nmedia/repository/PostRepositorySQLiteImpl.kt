@@ -9,7 +9,7 @@ import okhttp3.*
 import ru.netology.nmedia.dataClasses.Post
 import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
-import ru.netology.nmedia.api.Api
+import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toEntity
@@ -19,7 +19,10 @@ import java.io.IOException
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА РЕАЛИЗАЦИЮ МЕТОДОВ РАБОТЫ С ПОСТОМ, РАБОТАЕТ С СЕРВЕРОМ И БД */
 
-class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
+class PostRepositorySQLiteImpl(
+    private val postDao: PostDao,
+    private val apiService: ApiService,
+) : PostRepository {
 
     //играем с сервером
     private val client = OkHttpClient.Builder()
@@ -41,7 +44,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun getAll() {
         try {
             //запрашиваем с сервера
-            val response = Api.retrofitService.getAll()
+            val response = apiService.getAll()
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -59,7 +62,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun save(post: Post) {
         try {
             //запрашиваем с сервера
-            val response = Api.retrofitService.save(post)
+            val response = apiService.save(post)
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -81,7 +84,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
     override suspend fun removeById(id: Long) {
         try {
             //запрашиваем с сервера
-            val response = Api.retrofitService.removeById(id)
+            val response = apiService.removeById(id)
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -99,7 +102,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
         postDao.shareById(post.id)
 //TODO        try {
 //            //запрашиваем с сервера
-//            val response = PostsApi.retrofitService.shareById(post.id)
+//            val response = apiService.shareById(post.id)
 //
 //
 //            //ловим ошибки
@@ -119,7 +122,7 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
         //postDao.viewItById(post.id)
 /*TODO        try {
             //запрашиваем с сервера
-            val response = PostsApi.retrofitService.viewItById(post.id)
+            val response = apiService.viewItById(post.id)
 
             //ловим ошибки
             if (!response.isSuccessful) {
@@ -139,9 +142,9 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
         try {
             //запрашиваем с сервера
             val response = if (post.likeByMe) {
-                Api.retrofitService.dislikeById(post.id)
+                apiService.dislikeById(post.id)
             } else {
-                Api.retrofitService.likeById(post.id)
+                apiService.likeById(post.id)
 
             }
 
@@ -160,8 +163,8 @@ class PostRepositorySQLiteImpl(private val postDao: PostDao) : PostRepository {
 
     override fun getNewerCount(id: Long): Flow<Int> = flow {
         try {
-            delay(10_000L)
-            val response = Api.retrofitService.getNewer(id)
+            delay(120_000L)
+            val response = apiService.getNewer(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
