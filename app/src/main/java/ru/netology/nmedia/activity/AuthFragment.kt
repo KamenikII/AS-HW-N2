@@ -15,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import ru.netology.nmedia.R
 import ru.netology.nmedia.util.Companion.Companion.textArg
@@ -25,6 +26,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ОКНО РЕГИСТРАЦИИ, А ТАК ЖЕ НАВИГАЦИЮ */
 
+@AndroidEntryPoint
 class AuthFragment : Fragment() {
     private val binding by lazy { FragmentAuthBinding.inflate(layoutInflater) }
     private val viewModel: AuthViewModel by viewModels()

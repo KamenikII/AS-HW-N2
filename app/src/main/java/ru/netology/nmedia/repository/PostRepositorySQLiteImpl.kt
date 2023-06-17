@@ -16,10 +16,11 @@ import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.errors.ApiError
 import ru.netology.nmedia.errors.NetworkError
 import java.io.IOException
+import javax.inject.Inject
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА РЕАЛИЗАЦИЮ МЕТОДОВ РАБОТЫ С ПОСТОМ, РАБОТАЕТ С СЕРВЕРОМ И БД */
 
-class PostRepositorySQLiteImpl(
+class PostRepositorySQLiteImpl @Inject constructor (
     private val postDao: PostDao,
     private val apiService: ApiService,
 ) : PostRepository {

@@ -13,9 +13,10 @@ import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 import ru.netology.nmedia.databinding.FragmentNewPostBinding
 import ru.netology.nmedia.util.Companion.Companion.textArg
-
+import dagger.hilt.android.AndroidEntryPoint
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА СОЗДАНИЕ НОВОГО ПОСТА */
 
+@AndroidEntryPoint
 class NewPostFragment : Fragment() {
     private val binding by lazy { FragmentNewPostBinding.inflate(layoutInflater) }
     private val viewModel: PostViewModel by viewModels(

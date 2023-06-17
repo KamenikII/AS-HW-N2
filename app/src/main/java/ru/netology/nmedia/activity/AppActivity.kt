@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.viewmodel.AuthViewModel
@@ -14,7 +15,7 @@ import ru.netology.nmedia.viewmodel.ViewModelFactory
 
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЗАПУСК ПРИЛОЖЕНИЯ И РАБОТУ С СЕРВИСАМИ GOOGLE */
-
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
     private val dependencyContainer = DependencyContainer.getInstance()
     private val viewModel: AuthViewModel by viewModels(

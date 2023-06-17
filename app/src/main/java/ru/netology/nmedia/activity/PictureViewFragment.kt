@@ -9,7 +9,9 @@ import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.databinding.FragmentPictureViewBinding
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.view.load
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PictureViewFragment : Fragment() {
 
     override fun onCreateView(
