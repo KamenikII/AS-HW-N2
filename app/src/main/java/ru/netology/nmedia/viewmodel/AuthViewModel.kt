@@ -2,6 +2,7 @@ package ru.netology.nmedia.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -17,10 +18,12 @@ import ru.netology.nmedia.dto.Token
 import ru.netology.nmedia.model.PhotoModel
 import java.io.File
 import java.io.IOException
+import javax.inject.Inject
 
 /**КЛАСС, ОТВЕЧАЮЩИЙ ЗА ДЕЙСТВИЯ ПРИ АВТОРИЗАЦИИ*/
 
-class AuthViewModel(
+@HiltViewModel
+class AuthViewModel @Inject constructor (
     private val appAuth : AppAuth,
     private val apiService: ApiService,
 ) : ViewModel() {

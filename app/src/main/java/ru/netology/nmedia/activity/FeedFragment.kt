@@ -8,7 +8,6 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
@@ -17,26 +16,27 @@ import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentFeedBinding
-import ru.netology.nmedia.di.DependencyContainer
 import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
-import ru.netology.nmedia.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import ru.netology.nmedia.auth.AppAuth
+import javax.inject.Inject
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЛЕНТУ НОВОСТЕЙ, РАБОТУ С ПОСТАМИ И ОТРИСОВКУ, А ТАК ЖЕ НАВИГАЦИЮ */
 
 @AndroidEntryPoint
 class FeedFragment : Fragment() {
+
+    @Inject //Внедрение зависимости
+    lateinit var appAuth: AppAuth
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //зависимости
-        val dependencyContainer = DependencyContainer.getInstance()
-
         //рисуем фрагмент fragment_feed
         val binding = FragmentFeedBinding.inflate(layoutInflater)
 
@@ -45,12 +45,6 @@ class FeedFragment : Fragment() {
         //viewmodel
         val viewModel: PostViewModel by viewModels(
             ownerProducer = ::requireParentFragment,
-            factoryProducer = {
-                ViewModelFactory(dependencyContainer.repository,
-                dependencyContainer.appAuth,
-                dependencyContainer.apiService,
-                )
-            }
         )
         val authViewModel: AuthViewModel by viewModels()
 
@@ -186,7 +180,7 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_in)
                                 }
                             )
-                            dependencyContainer.appAuth.setAuth(5, "x-token")
+                            appAuth.setAuth(5, "x-token")
                             true
                         }
                         R.id.signup -> {
@@ -196,11 +190,11 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_up)
                                 }
                             )
-                            dependencyContainer.appAuth.setAuth(5, "x-token")
+                            appAuth.setAuth(5, "x-token")
                             true
                         }
                         R.id.signout -> {
-                            dependencyContainer.appAuth.removeAuth()
+                            appAuth.removeAuth()
                             true
                         }
                         else -> false

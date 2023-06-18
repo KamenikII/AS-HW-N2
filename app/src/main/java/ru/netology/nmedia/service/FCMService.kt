@@ -9,20 +9,22 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.auth.AppAuth
-import ru.netology.nmedia.di.DependencyContainer
+import javax.inject.Inject
 import kotlin.random.Random
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА СЕРВЕР И УВЕДОМЛЕНИЯ */
 
+@AndroidEntryPoint
 class FCMService : FirebaseMessagingService() {
     private val action = "action"
     private val content = "content"
     private val channelId = "remote"
     private val gson = Gson()
-    private val dependencyContainer = DependencyContainer.getInstance()
 
+    @Inject
     lateinit var appAuth:AppAuth
 
     override fun onCreate() {
@@ -78,7 +80,7 @@ class FCMService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        dependencyContainer.appAuth.sendPushToken(token)
+        appAuth.sendPushToken(token)
     }
 
     private fun handleLike(content: LikeFCM) {

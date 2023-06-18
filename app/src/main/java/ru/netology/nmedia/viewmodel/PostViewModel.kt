@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
@@ -18,10 +19,12 @@ import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
+import javax.inject.Inject
 
 /** КЛАСС ДЛЯ РАБОТЫ С ПОСТАМИ, ОБРАБОТКИ ИЗМЕНЕНИЙ, ЛОВЛЯ ОШИБОК */
 
-class PostViewModel(
+@HiltViewModel
+class PostViewModel @Inject constructor (
     private val repository: PostRepository,
     appAuth: AppAuth,
 ) : ViewModel() {

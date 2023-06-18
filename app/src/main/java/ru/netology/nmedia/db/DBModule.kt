@@ -10,10 +10,10 @@ import dagger.hilt.components.SingletonComponent
 import ru.netology.nmedia.dao.PostDao
 import javax.inject.Singleton
 
-/**Модуль для работы БД*/
+/**класс, предоставляющий зависимости с БД*/
 
 @InstallIn(SingletonComponent::class) //зависимость на уровне всего приложения
-@Module
+@Module //предоставляет зависимости
 class DBModule {
 
     @Singleton //Аннотация, которое говорит на какое время создано.
