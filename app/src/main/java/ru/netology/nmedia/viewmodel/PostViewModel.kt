@@ -68,6 +68,12 @@ class PostViewModel @Inject constructor (
             .asLiveData(Dispatchers.Default)
     }
 
+    //photo
+    private val noPhoto = PhotoModel()
+    private val _photo = MutableLiveData(noPhoto)
+    val photo: LiveData<PhotoModel>
+        get() = _photo
+
     init {
         loadPosts()
     }
@@ -102,6 +108,7 @@ class PostViewModel @Inject constructor (
     }
 
     fun likeById(id: Long) = viewModelScope.launch {
+
         val post = data.value?.posts?.find { it.id == id } ?: emptyPost
         try {
             _state.value = FeedModelState(loading = true)

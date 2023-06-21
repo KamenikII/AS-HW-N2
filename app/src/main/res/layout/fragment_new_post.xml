@@ -6,20 +6,107 @@
     android:layout_height="match_parent"
     tools:context=".activity.NewPostFragment">
 
+    <!--Окно для создания поста -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/new_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/edit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            tools:ignore="MissingConstraints" />
+        <!--Позволяет скролить большой текст -->
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fab_cancel">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--Поле для текста -->
+                <EditText
+                    android:id="@+id/edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:inputType="textMultiLine"
+                    android:padding="@dimen/margin16dp" />
+
+                <!--Окошко дял хранения фото -->
+                <FrameLayout
+                    android:id="@+id/photoContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!--Само фото -->
+                    <ImageView
+                        android:id="@+id/photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:contentDescription="@string/description_photo" />
+
+                    <!--Удалить фото -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/removePhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:text="@string/remove" />
+                </FrameLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!--Делитель -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/margin16dp"
+            android:layout_marginEnd="@dimen/margin16dp"
+            android:background="@color/divider_color"
+            app:layout_constraintBottom_toTopOf="@id/buttonPanel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!--Панель кнопок -->
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <!--Выбрать фото -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/pickPhoto"
+                style="@style/Widget.AppTheme.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_select_photo"
+                android:padding="@dimen/margin16dp"
+                app:icon="@drawable/ic_photo_24dp" />
+
+            <!--Сделать фото -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/takePhoto"
+                style="@style/Widget.AppTheme.IconButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_take_photo"
+                android:padding="@dimen/margin16dp"
+                app:icon="@drawable/ic_camera_24dp" />
+        </LinearLayout>
+
+
+
+        <!--Кнопка возрата к ленте -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:src="@drawable/ic_baseline_undo_24"
             android:id="@+id/fab_cancel"
@@ -27,9 +114,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="@dimen/margin16dp" />
 
+        <!--Поддтвердить изменения -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/ok"
             android:layout_width="wrap_content"
@@ -37,10 +125,11 @@
             android:contentDescription="@string/description_post_save"
             app:srcCompat="@drawable/ic_ok_24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="@dimen/margin16dp"
             android:layout_marginBottom="@dimen/margin16dp" />
 
+        <!--Изображение сейва -->
         <ProgressBar
             android:id="@+id/saving_progress_bar"
             android:layout_width="wrap_content"

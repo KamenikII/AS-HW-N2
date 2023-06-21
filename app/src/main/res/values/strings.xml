@@ -61,4 +61,8 @@
     <string name="for_a_long_time_separator">For a long time</string>
     <string name="description_photo">description photo</string>
     <string name="remove">Remove</string>
+    <string name="menu_save">Save</string>
+    <string name="description_take_photo">Take photo</string>
+    <string name="description_photo">Photo</string>
+    <string name="description_select_photo">Select photo</string>
 </resources>
