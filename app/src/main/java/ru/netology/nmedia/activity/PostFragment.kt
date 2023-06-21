@@ -19,9 +19,11 @@ import ru.netology.nmedia.databinding.FragmentPostBinding
 import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.PostViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 /** ДАННЫЙ КЛАСС РАБОТАЕТ С ОТДЕЛЬНЫХ ПОСТОМ, ЕГО ОТРИСОВКОЙ И ВЫВОДОМ ИНФОРМАЦИИ */
 
+@AndroidEntryPoint
 class PostFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,

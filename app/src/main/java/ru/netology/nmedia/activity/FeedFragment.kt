@@ -14,17 +14,24 @@ import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
 import ru.netology.nmedia.adapters.OnPostListener
 import ru.netology.nmedia.adapters.PostsAdapter
-import ru.netology.nmedia.auth.AppAuth
 import ru.netology.nmedia.dataClasses.Post
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.util.Companion.Companion.longArg
 import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import ru.netology.nmedia.auth.AppAuth
+import javax.inject.Inject
 
 /** ДАННЫЙ КЛАСС ОТВЕЧАЕТ ЗА ЛЕНТУ НОВОСТЕЙ, РАБОТУ С ПОСТАМИ И ОТРИСОВКУ, А ТАК ЖЕ НАВИГАЦИЮ */
 
+@AndroidEntryPoint
 class FeedFragment : Fragment() {
+
+    @Inject //Внедрение зависимости
+    lateinit var appAuth: AppAuth
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +43,9 @@ class FeedFragment : Fragment() {
         var newPostCount = 0
 
         //viewmodel
-        val viewModel: PostViewModel by viewModels(::requireParentFragment)
+        val viewModel: PostViewModel by viewModels(
+            ownerProducer = ::requireParentFragment,
+        )
         val authViewModel: AuthViewModel by viewModels()
 
         val adapter = PostsAdapter(
@@ -166,10 +175,6 @@ class FeedFragment : Fragment() {
                 //реакции на кнопки
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
-                        R.id.signout -> {
-                            AppAuth.getInstance().removeAuth()
-                            true
-                        }
                         R.id.signin -> {
                             findNavController().navigate(
                                 R.id.action_feedFragment_to_authFragment,
@@ -177,6 +182,7 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_in)
                                 }
                             )
+                            appAuth.setAuth(5, "x-token")
                             true
                         }
                         R.id.signup -> {
@@ -186,6 +192,11 @@ class FeedFragment : Fragment() {
                                     textArg = getString(R.string.sign_up)
                                 }
                             )
+                            appAuth.setAuth(5, "x-token")
+                            true
+                        }
+                        R.id.signout -> {
+                            appAuth.removeAuth()
                             true
                         }
                         else -> false
