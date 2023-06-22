@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.PagingData
 import ru.netology.nmedia.dataClasses.Post
 import kotlinx.coroutines.flow.Flow
 
@@ -7,12 +8,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
     //служебное
-    fun data(): Flow<List<Post>> //
+    val data: Flow<PagingData<Post>> //
     suspend fun getAll() //возращает список фукнций
     suspend fun save(post: Post) //сохраняет пост
     suspend fun edit(post: Post) //изменяет пост
     suspend fun removeById(id: Long) //удаляет пост
-    fun getNewerCount(id: Long): Flow<Int>
+    fun getNewerCount(): Flow<Int>
 
     //пользовательское
     suspend fun shareById(post: Post) //поделиться постом

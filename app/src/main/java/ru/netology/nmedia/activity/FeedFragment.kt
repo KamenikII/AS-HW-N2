@@ -8,7 +8,9 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
@@ -21,6 +23,7 @@ import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nmedia.auth.AppAuth
 import javax.inject.Inject
 
@@ -140,11 +143,22 @@ class FeedFragment : Fragment() {
 
         }
 
-        binding.swipe.setOnRefreshListener { viewModel.refreshPosts()}
+        binding.swipe.setOnRefreshListener {
+            adapter.refresh()
+        }
 
-        viewModel.data.observe(viewLifecycleOwner) { data ->
-            adapter.submitList(data.posts)
-            binding.emptyText.isVisible = data.empty
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest{
+                adapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest {
+                binding.swipe.isRefreshing = it.refresh is LoadState.Loading
+                        || it.append is LoadState.Loading
+                        || it.prepend is LoadState.Loading
+            }
         }
 
         binding.retryButton.setOnClickListener {
