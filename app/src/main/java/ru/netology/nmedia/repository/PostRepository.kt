@@ -18,5 +18,5 @@ interface PostRepository {
     //пользовательское
     suspend fun shareById(post: Post) //поделиться постом
     suspend fun viewById(post: Post) //просмотрено
-    suspend fun likeById(post: Post) //лайк поста
+    suspend fun likeById(id: Long) //лайк поста
 }

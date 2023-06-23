@@ -155,15 +155,15 @@ class PostRepositorySQLiteImpl @Inject constructor (
         }
 */    }
 
-    override suspend fun likeById(post: Post) {
-        postDao.likeById(post.id)
+    override suspend fun likeById(id: Long) {
+        val post = apiService.getById(id).body()
+        postDao.likeById(post!!.id)
         try {
             //запрашиваем с сервера
             val response = if (post.likeByMe) {
                 apiService.dislikeById(post.id)
             } else {
                 apiService.likeById(post.id)
-
             }
 
             //ловим ошибки

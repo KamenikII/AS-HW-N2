@@ -133,14 +133,17 @@ class FeedFragment : Fragment() {
                     .show()
             }
         }
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
-            println("----------Новый пост: " + state)
-            if (state != 0) {
-                newPostCount += 1
-                binding.newPostButton.isVisible = true
-                binding.newPostButton.text = "$newPostCount" + getString(R.string.new_post)
-            }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.newerCount.collectLatest { state ->
+                println("----------Новый пост: " + state)
+                if (state != 0) {
+                    newPostCount += 1
+                    binding.newPostButton.isVisible = true
+                    binding.newPostButton.text = "$newPostCount" + getString(R.string.new_post)
+                }
+
+            }
         }
 
         binding.swipe.setOnRefreshListener {
