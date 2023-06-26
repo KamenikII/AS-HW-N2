@@ -13,6 +13,8 @@ import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.auth.AppAuth
 import javax.inject.Singleton
 
+/**класс, предоставляющий зависимости с Api*/
+
 @InstallIn(SingletonComponent::class)
 @Module
 class ApiModule {
