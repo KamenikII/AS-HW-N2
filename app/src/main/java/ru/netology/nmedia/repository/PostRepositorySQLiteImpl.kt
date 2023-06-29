@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.*
@@ -36,7 +35,7 @@ class PostRepositorySQLiteImpl @Inject constructor (
             enablePlaceholders = false,
         ),
         pagingSourceFactory = {
-            PostPagingSource(
+            PostRemoteMediator(
                 apiService
             )
         }

@@ -7,6 +7,7 @@ import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -46,9 +47,7 @@ class FeedFragment : Fragment() {
         var newPostCount = 0
 
         //viewmodel
-        val viewModel: PostViewModel by viewModels(
-            ownerProducer = ::requireParentFragment,
-        )
+        val viewModel: PostViewModel by activityViewModels()
         val authViewModel: AuthViewModel by viewModels()
 
         val adapter = PostsAdapter(

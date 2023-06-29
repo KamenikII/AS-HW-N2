@@ -9,7 +9,7 @@ import java.io.IOException
 
 /**КЛАСС, ДЛЯ ПОЛУЧЕНИЯ ПОСТОВ ПО СТРАНИЦАМ*/
 
-class PostPagingSource(
+class PostRemoteMediator( //временно не медиатор
     private val apiService: ApiService,
 ) : PagingSource<Long, Post>() {
     override fun getRefreshKey(state: PagingState<Long, Post>): Long? = null

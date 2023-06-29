@@ -54,7 +54,7 @@ interface ApiService {
     @POST("users/push-tokens")
     suspend fun saveToken(@Body token: PushToken): Response<Unit>
 
-    @GET("post/latest")
+    @GET("posts/latest")
     suspend fun getLatest(@Query("count") count: Int): Response<List<Post>>
 
     @GET("posts/{id}/before")
