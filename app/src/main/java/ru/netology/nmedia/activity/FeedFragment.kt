@@ -7,8 +7,11 @@ import android.view.*
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.PictureViewFragment.Companion.urlArg
@@ -21,6 +24,7 @@ import ru.netology.nmedia.util.Companion.Companion.textArg
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import ru.netology.nmedia.auth.AppAuth
 import javax.inject.Inject
 
@@ -43,9 +47,7 @@ class FeedFragment : Fragment() {
         var newPostCount = 0
 
         //viewmodel
-        val viewModel: PostViewModel by viewModels(
-            ownerProducer = ::requireParentFragment,
-        )
+        val viewModel: PostViewModel by activityViewModels()
         val authViewModel: AuthViewModel by viewModels()
 
         val adapter = PostsAdapter(
@@ -132,21 +134,35 @@ class FeedFragment : Fragment() {
                     .show()
             }
         }
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
-            println("----------Новый пост: " + state)
-            if (state != 0) {
-                newPostCount += 1
-                binding.newPostButton.isVisible = true
-                binding.newPostButton.text = "$newPostCount" + getString(R.string.new_post)
-            }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.newerCount.collectLatest { state ->
+                println("----------Новый пост: " + state)
+                if (state != 0) {
+                    newPostCount += 1
+                    binding.newPostButton.isVisible = true
+                    binding.newPostButton.text = "$newPostCount" + getString(R.string.new_post)
+                }
+
+            }
         }
 
-        binding.swipe.setOnRefreshListener { viewModel.refreshPosts()}
+        binding.swipe.setOnRefreshListener {
+            adapter.refresh()
+        }
 
-        viewModel.data.observe(viewLifecycleOwner) { data ->
-            adapter.submitList(data.posts)
-            binding.emptyText.isVisible = data.empty
+        lifecycleScope.launchWhenCreated {
+            viewModel.data.collectLatest{
+                adapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest {
+                binding.swipe.isRefreshing = it.refresh is LoadState.Loading
+                        || it.append is LoadState.Loading
+                        || it.prepend is LoadState.Loading
+            }
         }
 
         binding.retryButton.setOnClickListener {

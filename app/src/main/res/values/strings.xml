@@ -63,6 +63,5 @@
     <string name="remove">Remove</string>
     <string name="menu_save">Save</string>
     <string name="description_take_photo">Take photo</string>
-    <string name="description_photo">Photo</string>
     <string name="description_select_photo">Select photo</string>
 </resources>

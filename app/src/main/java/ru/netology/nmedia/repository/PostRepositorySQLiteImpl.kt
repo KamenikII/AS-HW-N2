@@ -1,8 +1,9 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.*
@@ -11,6 +12,7 @@ import java.util.concurrent.TimeUnit
 import okhttp3.MediaType.Companion.toMediaType
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.dao.PostRemoteKeyDao
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.errors.ApiError
@@ -22,8 +24,22 @@ import javax.inject.Inject
 
 class PostRepositorySQLiteImpl @Inject constructor (
     private val postDao: PostDao,
+    private val daoKey: PostRemoteKeyDao,
     private val apiService: ApiService,
 ) : PostRepository {
+
+    //наши посты на одну страницу
+    override val data = Pager(
+        config = PagingConfig(
+            pageSize = 10,
+            enablePlaceholders = false,
+        ),
+        pagingSourceFactory = {
+            PostRemoteMediator(
+                apiService
+            )
+        }
+    ).flow
 
     //играем с сервером
     private val client = OkHttpClient.Builder()
@@ -38,9 +54,9 @@ class PostRepositorySQLiteImpl @Inject constructor (
     }
 
     //override fun data() = postDao.getAll().map {it.map(PostEntity::toDto)}
-    override fun data() = postDao
-        .getAllVisible().map{it.map(PostEntity::toDto)}
-        .flowOn(Dispatchers.Default)
+//    override fun data() = postDao
+//        .getAllVisible().map{it.map(PostEntity::toDto)}
+//        .flowOn(Dispatchers.Default)
 
     override suspend fun getAll() {
         try {
@@ -139,15 +155,15 @@ class PostRepositorySQLiteImpl @Inject constructor (
         }
 */    }
 
-    override suspend fun likeById(post: Post) {
-        postDao.likeById(post.id)
+    override suspend fun likeById(id: Long) {
+        val post = apiService.getById(id).body()
+        postDao.likeById(post!!.id)
         try {
             //запрашиваем с сервера
             val response = if (post.likeByMe) {
                 apiService.dislikeById(post.id)
             } else {
                 apiService.likeById(post.id)
-
             }
 
             //ловим ошибки
@@ -163,10 +179,10 @@ class PostRepositorySQLiteImpl @Inject constructor (
         }
     }
 
-    override fun getNewerCount(id: Long): Flow<Int> = flow {
+    override fun getNewerCount(): Flow<Int> = flow {
         try {
             delay(120_000L)
-            val response = apiService.getNewer(id)
+            val response = apiService.getNewer(daoKey.max() ?: 0)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
