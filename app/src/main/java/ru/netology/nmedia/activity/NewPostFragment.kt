@@ -25,11 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class NewPostFragment : Fragment() {
     private val binding by lazy { FragmentNewPostBinding.inflate(layoutInflater) }
-    private val viewModel: PostViewModel by viewModels(
-        ownerProducer = ::requireParentFragment,
-
-    )
-
+    private val viewModel: PostViewModel by activityViewModels()
+    private var fragmentBinding: FragmentNewPostBinding? = null
 
     //редачим / создаём пост
     override fun onCreateView(

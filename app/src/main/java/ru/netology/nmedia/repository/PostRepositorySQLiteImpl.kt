@@ -1,10 +1,8 @@
 package ru.netology.nmedia.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
+import androidx.paging.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import okhttp3.*
@@ -14,6 +12,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.errors.ApiError
@@ -27,20 +26,22 @@ class PostRepositorySQLiteImpl @Inject constructor (
     private val postDao: PostDao,
     private val daoKey: PostRemoteKeyDao,
     private val apiService: ApiService,
+    private val appDB: AppDb,
 ) : PostRepository {
 
     //наши посты на одну страницу
-    override val data = Pager(
+    @OptIn(ExperimentalPagingApi::class)
+    override val data: Flow<PagingData<Post>> = Pager(
         config = PagingConfig(
             pageSize = 10,
             enablePlaceholders = false,
         ),
         pagingSourceFactory = {
-            PostPagingSource(
-                apiService
-            )
-        }
+            postDao.getPagingSource()
+        },
+        remoteMediator = PostRemoteMediator(apiService = apiService, postDao = postDao, postRemoteKeyDao = daoKey, appDb = appDB)
     ).flow
+        .map { it.map(PostEntity::toDto) }
 
     //играем с сервером
     private val client = OkHttpClient.Builder()
@@ -53,11 +54,6 @@ class PostRepositorySQLiteImpl @Inject constructor (
         const val BASE_URL = "http://10.0.2.2:9999"
         private val jsonType = "application/json".toMediaType()
     }
-
-    //override fun data() = postDao.getAll().map {it.map(PostEntity::toDto)}
-//    override fun data() = postDao
-//        .getAllVisible().map{it.map(PostEntity::toDto)}
-//        .flowOn(Dispatchers.Default)
 
     override suspend fun getAll() {
         try {

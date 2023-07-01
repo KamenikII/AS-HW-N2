@@ -66,12 +66,6 @@ class PostViewModel @Inject constructor(
     val newerCount = repository.getNewerCount()
         .catch { e -> e.printStackTrace() }
 
-    //photo
-    private val noPhoto = PhotoModel()
-    private val _photo = MutableLiveData(noPhoto)
-    val photo: LiveData<PhotoModel>
-        get() = _photo
-
     init {
         loadPosts()
     }
