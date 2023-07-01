@@ -54,6 +54,7 @@ class PostViewModel @Inject constructor(
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+    //photo
     private val _photo = MutableLiveData(
         PhotoModel(
             edited.value?.attachment?.url?.toUri(),
@@ -78,8 +79,6 @@ class PostViewModel @Inject constructor(
         try {
             //обозначаем лоудинг
             _state.value = FeedModelState(loading = true)
-            //отправка запроса
-            repository.getAll()
             _state.value = FeedModelState()
         } catch (e: Exception) {
             //выкидываем ошибку
@@ -91,8 +90,6 @@ class PostViewModel @Inject constructor(
         try {
             //записываем лоудинг
             _state.value = FeedModelState(refreshing = true)
-            //отправка запроса
-            repository.getAll()
             _state.value = FeedModelState()
         } catch (e: Exception) {
             _state.value = FeedModelState(error = true)

@@ -37,9 +37,11 @@ class PostRepositorySQLiteImpl @Inject constructor (
             enablePlaceholders = false,
         ),
         pagingSourceFactory = {
+
             postDao.getPagingSource()
         },
         remoteMediator = PostRemoteMediator(apiService = apiService, postDao = postDao, postRemoteKeyDao = daoKey, appDb = appDB)
+
     ).flow
         .map { it.map(PostEntity::toDto) }
 
