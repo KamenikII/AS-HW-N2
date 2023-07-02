@@ -3,12 +3,13 @@ package ru.netology.nmedia.repository
 import androidx.paging.PagingData
 import ru.netology.nmedia.dataClasses.Post
 import kotlinx.coroutines.flow.Flow
+import ru.netology.nmedia.dataClasses.FeedItem
 
 /** ИНТЕРФЕЙС, В КОТОРОМ ОПИСАНЫ ВСЕ МЕТОДЫ РАБОТЫ С ПОСТОМ */
 
 interface PostRepository {
     //служебное
-    val data: Flow<PagingData<Post>> //
+    val data: Flow<PagingData<FeedItem>> //
     suspend fun getAll() //возращает список фукнций
     suspend fun save(post: Post) //сохраняет пост
     suspend fun edit(post: Post) //изменяет пост
