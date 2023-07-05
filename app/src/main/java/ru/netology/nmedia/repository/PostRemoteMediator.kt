@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+
 import androidx.paging.*
 import androidx.room.withTransaction
 import retrofit2.HttpException
@@ -51,8 +52,8 @@ class PostRemoteMediator(
             }
 
             val data = result.body().orEmpty()
-            if (data.isEmpty()) return MediatorResult.Success(false)
 
+            if (data.isEmpty()) return MediatorResult.Success(false)
             postDao.insert(data.map { PostEntity.fromDto(it)})
 
             appDb.withTransaction {
