@@ -6,7 +6,7 @@ import androidx.room.Embedded
 
 data class Post(
     //info about post
-    val id: Long, //Уникальный индификатор поста
+    override val id: Long, //Уникальный индификатор поста
     val author: String = "Адмен XD", //Имя автора
     val authorImage: String? = null, //Аватарка автора
     val published: Long, //Дата публикации
@@ -29,4 +29,4 @@ data class Post(
     val viewItByMe: Boolean = false, //просмотрел ли пользователь пост
     val viewIt: Int = 0,
     val hidden: Boolean, //View = View(), //кол-во просмотров
-)
+) : FeedItem

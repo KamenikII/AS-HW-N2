@@ -25,6 +25,7 @@ import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import ru.netology.nmedia.adapters.PostLoadStateAdapter
 import ru.netology.nmedia.auth.AppAuth
 import javax.inject.Inject
 
@@ -123,7 +124,18 @@ class FeedFragment : Fragment() {
             }
         )
 
-        binding.list.adapter = adapter
+        binding.list.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = PostLoadStateAdapter(object : PostLoadStateAdapter.OnRetryListener {
+                override fun onRetry() {
+                    adapter.retry()
+                }
+            }),
+            footer = PostLoadStateAdapter(object : PostLoadStateAdapter.OnRetryListener {
+                override fun onRetry() {
+                    adapter.refresh()
+                }
+            }),
+        )
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding.progress.isVisible = state.loading
@@ -160,8 +172,6 @@ class FeedFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest {
                 binding.swipe.isRefreshing = it.refresh is LoadState.Loading
-                        || it.append is LoadState.Loading
-                        || it.prepend is LoadState.Loading
             }
         }
 

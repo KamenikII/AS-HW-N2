@@ -12,6 +12,8 @@ import okhttp3.MediaType.Companion.toMediaType
 import ru.netology.nmedia.api.ApiService
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.netology.nmedia.dataClasses.Ad
+import ru.netology.nmedia.dataClasses.FeedItem
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toEntity
@@ -19,6 +21,7 @@ import ru.netology.nmedia.errors.ApiError
 import ru.netology.nmedia.errors.NetworkError
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.random.Random
 
 /** КЛАСС, ОТВЕЧАЮЩИЙ ЗА РЕАЛИЗАЦИЮ МЕТОДОВ РАБОТЫ С ПОСТОМ, РАБОТАЕТ С СЕРВЕРОМ И БД */
 
@@ -31,7 +34,7 @@ class PostRepositorySQLiteImpl @Inject constructor (
 
     //наши посты на одну страницу
     @OptIn(ExperimentalPagingApi::class)
-    override val data: Flow<PagingData<Post>> = Pager(
+    override val data: Flow<PagingData<FeedItem>> = Pager(
         config = PagingConfig(
             pageSize = 10,
             enablePlaceholders = false,
@@ -43,7 +46,14 @@ class PostRepositorySQLiteImpl @Inject constructor (
         remoteMediator = PostRemoteMediator(apiService = apiService, postDao = postDao, postRemoteKeyDao = daoKey, appDb = appDB)
 
     ).flow
-        .map { it.map(PostEntity::toDto) }
+        .map { pagingData ->
+            pagingData.map(PostEntity::toDto) 
+                .insertSeparators { previous, _ -> //_ - игнорирование
+                    if (previous?.id?.rem(5) == 0L) {
+                        Ad(Random.nextLong(), "figma.jpg")
+                    } else null
+                }
+    }
 
     //играем с сервером
     private val client = OkHttpClient.Builder()

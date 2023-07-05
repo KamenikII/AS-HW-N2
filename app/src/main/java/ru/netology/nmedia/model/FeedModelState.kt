@@ -1,8 +1,5 @@
 package ru.netology.nmedia.model
 
-import androidx.lifecycle.LiveData
-import ru.netology.nmedia.dataClasses.Post
-
 /** Состояния поста / запросов */
 
 data class FeedModelState(

@@ -52,7 +52,8 @@ class PostRemoteMediator(
             }
 
             val data = result.body().orEmpty()
-            
+
+            if (data.isEmpty()) return MediatorResult.Success(false)
             postDao.insert(data.map { PostEntity.fromDto(it)})
 
             appDb.withTransaction {
