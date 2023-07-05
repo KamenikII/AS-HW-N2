@@ -17,4 +17,9 @@ class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
         return oldItem == newItem
     }
 
+    override fun getChangePayload(oldItem: Post, newItem: Post): Any =
+        PayLoad(
+            likeByMe = newItem.likeByMe.takeIf { oldItem.likeByMe != it },
+            content = newItem.content.takeIf { oldItem.content != it },
+        )
 }

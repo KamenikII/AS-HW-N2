@@ -45,5 +45,20 @@ class PostsAdapter(
         }
     }
 
+    override fun onBindViewHolder(
+        holder: PostViewHolder,
+        position: Int,
+        payloads: List<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            payloads.forEach {
+                if (it is PayLoad) {
+                    holder.bind(it)
+                }
+            }
+        }
+    }
 }
 
