@@ -46,7 +46,7 @@ class PostsAdapter(
     }
 
     override fun onBindViewHolder(
-        holder: PostViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
         payloads: List<Any>
     ) {
@@ -54,8 +54,10 @@ class PostsAdapter(
             onBindViewHolder(holder, position)
         } else {
             payloads.forEach {
-                if (it is PayLoad) {
-                    holder.bind(it)
+                if (holder is PostViewHolder) {
+                    if (it is PayLoad) {
+                        holder.bind(it)
+                    }
                 }
             }
         }

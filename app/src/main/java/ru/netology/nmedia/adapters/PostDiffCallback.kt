@@ -1,6 +1,7 @@
 package ru.netology.nmedia.adapters
 
 import androidx.recyclerview.widget.DiffUtil
+import ru.netology.nmedia.dataClasses.Ad
 import ru.netology.nmedia.dataClasses.FeedItem
 import ru.netology.nmedia.dataClasses.Post
 
@@ -17,9 +18,18 @@ class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
         return oldItem == newItem
     }
 
-    override fun getChangePayload(oldItem: Post, newItem: Post): Any =
-        PayLoad(
-            likeByMe = newItem.likeByMe.takeIf { oldItem.likeByMe != it },
-            content = newItem.content.takeIf { oldItem.content != it },
-        )
+    override fun getChangePayload(oldItem: FeedItem, newItem: FeedItem): Any? {
+            return when {
+                (oldItem is Post && newItem is Post) ->
+                    PayLoad(
+                        likeByMe = newItem.likeByMe.takeIf { oldItem.likeByMe != it },
+                        content = newItem.content.takeIf { oldItem.content != it },
+                    )
+                (oldItem is Ad && newItem is Ad) ->
+                    PayLoad(
+                        image = newItem.image.takeIf { it != oldItem.image},
+                    )
+                else -> null
+            }
+        }
 }
