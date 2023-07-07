@@ -45,5 +45,22 @@ class PostsAdapter(
         }
     }
 
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            payloads.forEach {
+                if (holder is PostViewHolder) {
+                    if (it is PayLoad) {
+                        holder.bind(it)
+                    }
+                }
+            }
+        }
+    }
 }
 

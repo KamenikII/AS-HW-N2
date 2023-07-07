@@ -1,5 +1,7 @@
 package ru.netology.nmedia.adapters
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.view.View
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -90,5 +92,28 @@ class PostViewHolder(
                 }.show()
             }
         }
+    }
+
+    fun bind(payload: PayLoad) {
+        payload.likeByMe?.also { liked ->
+            binding.like.setIconResource(
+                if (liked) R.drawable.ic_pressedlike else R.drawable.ic_unpressedlike
+            )
+            if (liked) {
+                ObjectAnimator.ofPropertyValuesHolder(
+                    binding.like,
+                    PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0F, 1.2F, 1.0F, 1.2F),
+                    PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0F, 1.2F, 1.0F, 1.2F)
+                ).start()
+            } else {
+                ObjectAnimator.ofFloat(
+                    binding.like,
+                    View.ROTATION,
+                    0F, 360F
+                ).start()
+            }
+        }
+
+        payload.content?.let(binding.content::setText)
     }
 }
